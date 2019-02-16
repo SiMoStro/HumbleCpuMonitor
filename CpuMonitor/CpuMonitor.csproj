@@ -35,6 +35,9 @@
   <PropertyGroup>
     <ApplicationIcon>ICOs\07-ico.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>CpuMonitor.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

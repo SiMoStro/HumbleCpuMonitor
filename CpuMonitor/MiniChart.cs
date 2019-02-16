@@ -16,6 +16,8 @@ namespace CpuMonitor
 
         #endregion
 
+        internal Action<MiniChart> DoubleClickAction { get; set; }
+
         internal MiniChart()
         {
             DoubleBuffered = true;
@@ -32,11 +34,16 @@ namespace CpuMonitor
             Invalidate();
         }
 
+        internal void Restart()
+        {
+            _values.Clear();
+            Invalidate();
+        }
+
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
             base.OnMouseDoubleClick(e);
-            _values.Clear();
-            Invalidate();
+            DoubleClickAction?.Invoke(this);
         }
 
         protected override void OnPaint(PaintEventArgs e)

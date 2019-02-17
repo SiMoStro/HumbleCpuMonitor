@@ -1,16 +1,15 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Modificare i valori di questi attributi per modificare le informazioni
 // associate a un assembly.
-[assembly: AssemblyTitle("CpuMonitor")]
+[assembly: AssemblyTitle("Humble CPU Monitor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HP Inc.")]
-[assembly: AssemblyProduct("CpuMonitor")]
-[assembly: AssemblyCopyright("Copyright © HP Inc. 2019")]
+[assembly: AssemblyCompany("Simone Galleni")]
+[assembly: AssemblyProduct("Humble CPU Monitor")]
+[assembly: AssemblyCopyright("Copyright © Simone Galleni")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

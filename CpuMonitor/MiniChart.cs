@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CpuMonitor
+namespace HumbleCpuMonitor
 {
     internal class MiniChart : Control
     {

@@ -1,4 +1,4 @@
-﻿namespace CpuMonitor
+﻿namespace HumbleCpuMonitor
 {
     partial class FormMain
     {

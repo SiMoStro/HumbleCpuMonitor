@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
 
-namespace CpuMonitor
+namespace HumbleCpuMonitor
 {
     public partial class FormMain : Form
     {
@@ -83,7 +83,7 @@ namespace CpuMonitor
             Assembly assembly = Assembly.GetEntryAssembly();
             for (int i = 0; i < 15; i++)
             {
-                string icoName = "CpuMonitor.ICOs." + i.ToString("00") + "-ico.ico";
+                string icoName = "HumbleCpuMonitor.ICOs." + i.ToString("00") + "-ico.ico";
                 Stream ico = assembly.GetManifestResourceStream(icoName);
                 Icon icon = new Icon(ico);
                 _icons[i] = icon;

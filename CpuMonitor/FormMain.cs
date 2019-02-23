@@ -31,6 +31,10 @@ namespace HumbleCpuMonitor
         private MenuItem _updTwoSeconds;
         private MenuItem _updThreeSeconds;
 
+        private ProcessSelector _processSelector;
+
+        private MenuItem _selectProcess;
+
         private int _processors;
 
         private MiniChart _miniChart;
@@ -39,15 +43,26 @@ namespace HumbleCpuMonitor
         private bool _internalExit;
         private Timer _timer;
         private bool _totalCpuMode;
+        private string _title = "Humble CPU Monitor";
+        private long _cycles;
 
-        TableLayoutPanel _multiCpuPanel;
+        private TableLayoutPanel _multiCpuPanel;
+
+        private Processes _processes;
+        private Process _self;
 
         #endregion
 
         public FormMain()
         {
-
             InitializeComponent();
+
+            SuperPower.Enable();
+            _self = Process.GetCurrentProcess();
+
+            _processes = new Processes();
+            UpdateTitle();
+
             _icons = new Icon[15];
             _miniChart = new MiniChart();
 
@@ -78,6 +93,14 @@ namespace HumbleCpuMonitor
             _timer.Start();
         }
 
+        private void UpdateTitle()
+        {
+            _self.Refresh();
+            Text = _title + " (WrkSet: " + Utilities.FormatBytes(_self.WorkingSet64) + ")";
+        }
+
+        
+
         private void LoadIcons()
         {
             Assembly assembly = Assembly.GetEntryAssembly();
@@ -88,6 +111,17 @@ namespace HumbleCpuMonitor
                 Icon icon = new Icon(ico);
                 _icons[i] = icon;
             }
+        }
+
+        public static Icon GetIcon(int idx)
+        {
+            if (idx < 0) idx = 0;
+            if (idx > 14) idx = 14;
+            Assembly assembly = Assembly.GetEntryAssembly();
+            string icoName = "HumbleCpuMonitor.ICOs." + idx.ToString("00") + "-ico.ico";
+            Stream ico = assembly.GetManifestResourceStream(icoName);
+            Icon icon = new Icon(ico);
+            return icon;
         }
 
         private void BuildMenu()
@@ -123,6 +157,16 @@ namespace HumbleCpuMonitor
                 UpdateVisualizationMode();
             };
 
+            _selectProcess = new MenuItem("Select process");
+            _selectProcess.Click += (o, e) => {
+                if (_processSelector != null) return;
+                _processes.Update();
+                _processSelector = new ProcessSelector();
+                _processSelector.Initialize(_processes.Descriptors);
+                _processSelector.Show();
+                _processSelector.FormClosed += HandleProcessSelectorClosed;
+            };
+
             upd.MenuItems.Add(_updInsane);
             upd.MenuItems.Add(_updHalfSecond);
             upd.MenuItems.Add(_updOneSecond);
@@ -132,13 +176,28 @@ namespace HumbleCpuMonitor
             _menu.MenuItems.Add(_toggleShowHideMenu);
             _menu.MenuItems.Add(upd);
             _menu.MenuItems.Add(_toggleSingleCpuMenu);
+            _menu.MenuItems.Add(_selectProcess);
+            _menu.MenuItems.Add(new MenuItem("-"));
             _menu.MenuItems.Add(_exitMenu);
+
             _menu.Popup += (o, e) =>
             {
                 _toggleShowHideMenu.Text = Visible ? "Hide CPU chart" : "Show CPU chart";
                 _toggleSingleCpuMenu.Text = _totalCpuMode ? "Show separate CPUs" : "Show Total CPU usage";
+                _selectProcess.Enabled = (_processSelector == null);
             };
             _trayIcon.ContextMenu = _menu;
+        }
+
+        private void HandleProcessSelectorClosed(object sender, FormClosedEventArgs e)
+        {
+            ProcessSelector ps = sender as ProcessSelector;
+            ps.FormClosed -= HandleProcessSelectorClosed;
+            if(ps.SelectedPid != 0)
+            {
+                ProcessObserver po = new ProcessObserver(ps.SelectedPid, ps.SelectedProcessExecutable);
+            }
+            _processSelector = null;
         }
 
         private void ToggleWindowVisibility()
@@ -175,6 +234,8 @@ namespace HumbleCpuMonitor
         {
             TotalCpuSnapshot();
             if (!_totalCpuMode) AllCpuSnapshot();
+
+            if (++_cycles % 10 == 0) UpdateTitle();
         }
 
         private void UpdateVisualizationMode()

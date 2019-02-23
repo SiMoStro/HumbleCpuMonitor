@@ -33,17 +33,17 @@
             // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(982, 173);
+            this.ClientSize = new System.Drawing.Size(984, 161);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1280, 220);
+            this.MaximumSize = new System.Drawing.Size(1800, 200);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(320, 220);
+            this.MinimumSize = new System.Drawing.Size(400, 200);
             this.Name = "FormMain";
             this.ShowInTaskbar = false;
-            this.Text = "Humble CPU Monitor";
             this.TopMost = true;
             this.ResumeLayout(false);
 

@@ -54,12 +54,20 @@ namespace HumbleCpuMonitor
             _chart = new MiniChart();
 
             _process = Process.GetProcessById(pid);
+            _process.EnableRaisingEvents = true;
+            _process.Exited += HandleProcessExited;
             _chart.Dock = DockStyle.Fill;
 
             InitForm();
             _form.Show();
             UpdateTitle();
             Start();
+        }
+
+        private void HandleProcessExited(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            _form.Text = _name + " (Exited)";
         }
 
         private void InitForm()

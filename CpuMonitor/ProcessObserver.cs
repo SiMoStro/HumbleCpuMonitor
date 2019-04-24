@@ -67,6 +67,16 @@ namespace HumbleCpuMonitor
         private void HandleProcessExited(object sender, EventArgs e)
         {
             _timer.Stop();
+            if(_form.InvokeRequired)
+            {
+                _form.BeginInvoke(new Action(PostExit));
+                return;
+            }
+            PostExit();
+        }
+
+        private void PostExit()
+        {
             _form.Text = _name + " (Exited)";
         }
 

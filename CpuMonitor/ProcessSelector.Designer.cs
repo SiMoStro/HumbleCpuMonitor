@@ -35,6 +35,7 @@
             this.exeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this._tbFilter = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -58,11 +59,11 @@
             this.lvProcesses.FullRowSelect = true;
             this.lvProcesses.HideSelection = false;
             this.lvProcesses.HoverSelection = true;
-            this.lvProcesses.Location = new System.Drawing.Point(8, 32);
+            this.lvProcesses.Location = new System.Drawing.Point(8, 62);
             this.lvProcesses.Margin = new System.Windows.Forms.Padding(2);
             this.lvProcesses.MultiSelect = false;
             this.lvProcesses.Name = "lvProcesses";
-            this.lvProcesses.Size = new System.Drawing.Size(242, 348);
+            this.lvProcesses.Size = new System.Drawing.Size(242, 318);
             this.lvProcesses.TabIndex = 1;
             this.lvProcesses.UseCompatibleStateImageBehavior = false;
             this.lvProcesses.View = System.Windows.Forms.View.Details;
@@ -103,6 +104,13 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // _tbFilter
+            // 
+            this._tbFilter.Location = new System.Drawing.Point(10, 31);
+            this._tbFilter.Name = "_tbFilter";
+            this._tbFilter.Size = new System.Drawing.Size(239, 20);
+            this._tbFilter.TabIndex = 4;
+            // 
             // ProcessSelector
             // 
             this.AcceptButton = this.buttonOK;
@@ -110,6 +118,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(258, 425);
+            this.Controls.Add(this._tbFilter);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.lvProcesses);
@@ -135,5 +144,6 @@
         private System.Windows.Forms.ColumnHeader exeColumnHeader;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.TextBox _tbFilter;
     }
 }

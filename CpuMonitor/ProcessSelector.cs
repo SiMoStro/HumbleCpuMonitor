@@ -7,18 +7,34 @@ namespace HumbleCpuMonitor
 {
     public partial class ProcessSelector : Form
     {
+        private IReadOnlyList<ProcessDescriptor> _procs;
+
         public int SelectedPid { get; private set; }
 
         public string SelectedProcessExecutable { get; private set; }
         public ProcessSelector()
         {
             InitializeComponent();
+            _tbFilter.TextChanged += HandleFilterChanged;
+        }
+
+        private void HandleFilterChanged(object sender, EventArgs e)
+        {
+            UpdateItems(_tbFilter.Text);
         }
 
         public void Initialize(IReadOnlyList<ProcessDescriptor> processes)
         {
+            _procs = processes;
+            _tbFilter.Text = string.Empty;
+            UpdateItems(string.Empty);
+        }
+
+        private void UpdateItems(string filter)
+        {
             lvProcesses.Items.Clear();
-            foreach (ProcessDescriptor pd in processes.OrderBy(p => p.Name))
+            var filtered = _procs.Where(p => p.Name.Contains(filter)).OrderBy(n => n.Name);
+            foreach (ProcessDescriptor pd in filtered)
             {
                 ListViewItem lvi = new ListViewItem(new string[] { pd.Pid.ToString(), pd.Name });
                 lvProcesses.Items.Add(lvi);

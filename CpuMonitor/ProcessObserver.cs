@@ -74,20 +74,23 @@ namespace HumbleCpuMonitor
                     _form.BeginInvoke(new Action(PostExit));
                     return;
                 }
-
-                _process.Exited -= HandleProcessExited;
-                _process = null;
-                _timer.Stop();
                 PostExit();
             }
             catch (Exception exc)
             {
                 Console.WriteLine(exc.Message);
-            }            
+            }
         }
 
         private void PostExit()
         {
+            _timer.Stop();
+
+            if(_process != null)
+            {
+                _process.Exited -= HandleProcessExited;
+                _process = null;
+            }            
             _form.Text = _name + " (Exited)";
         }
 

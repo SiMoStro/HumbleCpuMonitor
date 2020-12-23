@@ -76,6 +76,7 @@ namespace HumbleCpuMonitor
                 }
 
                 _process.Exited -= HandleProcessExited;
+                _process = null;
                 _timer.Stop();
                 PostExit();
             }
@@ -129,6 +130,8 @@ namespace HumbleCpuMonitor
 
         private void HandleTimerTick(object sender, EventArgs e)
         {
+            if (_process == null) return;
+
             var ku = GetSnapshot();
             DateTime time = DateTime.UtcNow;
             LastDelta = time.Subtract(_lastSnapshotTime).TotalMilliseconds;

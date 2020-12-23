@@ -22,14 +22,15 @@ namespace HumbleCpuMonitor
         private const int StepSize = 7;
 
         private ContextMenu _menu;
-        private MenuItem _exitMenu;
-        private MenuItem _toggleShowHideMenu;
-        private MenuItem _toggleSingleCpuMenu;
-        private MenuItem _updInsane;
-        private MenuItem _updHalfSecond;
-        private MenuItem _updOneSecond;
-        private MenuItem _updTwoSeconds;
-        private MenuItem _updThreeSeconds;
+        private MenuItem _miExitMenu;
+        private MenuItem _miToggleShowHideMenu;
+        private MenuItem _miToggleSingleCpuMenu;
+        private MenuItem _miUpdInsane;
+        private MenuItem _miUpdHalfSecond;
+        private MenuItem _miUpdOneSecond;
+        private MenuItem _miUpdTwoSeconds;
+        private MenuItem _miUpdThreeSeconds;
+        private MenuItem _miMachineInfo;
 
         private ProcessSelector _processSelector;
 
@@ -51,11 +52,28 @@ namespace HumbleCpuMonitor
         private Processes _processes;
         private Process _self;
 
+        MachineInfo _machineInfo;
+
         #endregion
+
+        public float CpuUsage
+        {
+            get
+            {
+                return _cpuUsage;
+            }
+        }
+
+        public static FormMain Main
+        {
+            get; private set;
+        }
 
         public FormMain()
         {
             InitializeComponent();
+
+            Main = this;
 
             SuperPower.Enable();
             _self = Process.GetCurrentProcess();
@@ -99,8 +117,6 @@ namespace HumbleCpuMonitor
             Text = _title + " (WrkSet: " + Utilities.FormatBytes(_self.WorkingSet64) + ")";
         }
 
-        
-
         private void LoadIcons()
         {
             Assembly assembly = Assembly.GetEntryAssembly();
@@ -128,37 +144,55 @@ namespace HumbleCpuMonitor
         {
             _menu = new ContextMenu();
 
-            _exitMenu = new MenuItem("Exit");
-            _exitMenu.Click += (o, e) =>
+            _miExitMenu = new MenuItem("Exit");
+            _miExitMenu.Click += (o, e) =>
             {
                 _internalExit = true;
                 Application.Exit();
             };
 
-            _toggleShowHideMenu = new MenuItem();
-            _toggleShowHideMenu.Click += (o, e) => ToggleWindowVisibility();
+            _miToggleShowHideMenu = new MenuItem();
+            _miToggleShowHideMenu.Click += (o, e) => ToggleWindowVisibility();
 
             MenuItem upd = new MenuItem("Update Interval");
-            _updInsane = new MenuItem("1/4 second");
-            _updInsane.Click += (o, e) => _timer.Interval = 250;
-            _updHalfSecond = new MenuItem("1/2 second");
-            _updHalfSecond.Click += (o, e) => _timer.Interval = 500;
-            _updOneSecond = new MenuItem("1 second");
-            _updOneSecond.Click += (o, e) => _timer.Interval = 1000;
-            _updTwoSeconds = new MenuItem("2 second");
-            _updTwoSeconds.Click += (o, e) => _timer.Interval = 2000;
-            _updThreeSeconds = new MenuItem("3 second");
-            _updThreeSeconds.Click += (o, e) => _timer.Interval = 3000;
+            _miUpdInsane = new MenuItem("1/4 second");
+            _miUpdInsane.Click += (o, e) => _timer.Interval = 250;
+            _miUpdHalfSecond = new MenuItem("1/2 second");
+            _miUpdHalfSecond.Click += (o, e) => _timer.Interval = 500;
+            _miUpdOneSecond = new MenuItem("1 second");
+            _miUpdOneSecond.Click += (o, e) => _timer.Interval = 1000;
+            _miUpdTwoSeconds = new MenuItem("2 second");
+            _miUpdTwoSeconds.Click += (o, e) => _timer.Interval = 2000;
+            _miUpdThreeSeconds = new MenuItem("3 second");
+            _miUpdThreeSeconds.Click += (o, e) => _timer.Interval = 3000;
 
-            _toggleSingleCpuMenu = new MenuItem();
-            _toggleSingleCpuMenu.Click += (o, e) =>
+            _miToggleSingleCpuMenu = new MenuItem();
+            _miToggleSingleCpuMenu.Click += (o, e) =>
             {
                 _totalCpuMode = !_totalCpuMode;
                 UpdateVisualizationMode();
             };
 
+            _miMachineInfo = new MenuItem("Machine info");
+            _miMachineInfo.Click += (o, e) =>
+            {
+                if (_machineInfo != null)
+                {
+                    _machineInfo.Close();
+                    return;
+                }
+
+                _machineInfo = new MachineInfo();
+                _machineInfo.FormClosing += (o2, e2) =>
+                {
+                    _machineInfo = null;
+                };
+                _machineInfo.Show();
+            };
+
             _selectProcess = new MenuItem("Select process");
-            _selectProcess.Click += (o, e) => {
+            _selectProcess.Click += (o, e) =>
+            {
                 if (_processSelector != null) return;
                 _processes.Update();
                 _processSelector = new ProcessSelector();
@@ -167,23 +201,24 @@ namespace HumbleCpuMonitor
                 _processSelector.FormClosed += HandleProcessSelectorClosed;
             };
 
-            upd.MenuItems.Add(_updInsane);
-            upd.MenuItems.Add(_updHalfSecond);
-            upd.MenuItems.Add(_updOneSecond);
-            upd.MenuItems.Add(_updTwoSeconds);
-            upd.MenuItems.Add(_updThreeSeconds);
+            upd.MenuItems.Add(_miUpdInsane);
+            upd.MenuItems.Add(_miUpdHalfSecond);
+            upd.MenuItems.Add(_miUpdOneSecond);
+            upd.MenuItems.Add(_miUpdTwoSeconds);
+            upd.MenuItems.Add(_miUpdThreeSeconds);
 
-            _menu.MenuItems.Add(_toggleShowHideMenu);
+            _menu.MenuItems.Add(_miToggleShowHideMenu);
             _menu.MenuItems.Add(upd);
-            _menu.MenuItems.Add(_toggleSingleCpuMenu);
+            _menu.MenuItems.Add(_miToggleSingleCpuMenu);
             _menu.MenuItems.Add(_selectProcess);
+            _menu.MenuItems.Add(_miMachineInfo);
             _menu.MenuItems.Add(new MenuItem("-"));
-            _menu.MenuItems.Add(_exitMenu);
+            _menu.MenuItems.Add(_miExitMenu);
 
             _menu.Popup += (o, e) =>
             {
-                _toggleShowHideMenu.Text = Visible ? "Hide CPU chart" : "Show CPU chart";
-                _toggleSingleCpuMenu.Text = _totalCpuMode ? "Show separate CPUs" : "Show Total CPU usage";
+                _miToggleShowHideMenu.Text = Visible ? "Hide CPU chart" : "Show CPU chart";
+                _miToggleSingleCpuMenu.Text = _totalCpuMode ? "Show separate CPUs" : "Show Total CPU usage";
                 _selectProcess.Enabled = (_processSelector == null);
             };
             _trayIcon.ContextMenu = _menu;
@@ -193,7 +228,7 @@ namespace HumbleCpuMonitor
         {
             ProcessSelector ps = sender as ProcessSelector;
             ps.FormClosed -= HandleProcessSelectorClosed;
-            if(ps.SelectedPid != 0)
+            if (ps.SelectedPid != 0)
             {
                 ProcessObserver po = new ProcessObserver(ps.SelectedPid, ps.SelectedProcessExecutable);
             }
@@ -243,7 +278,7 @@ namespace HumbleCpuMonitor
             Controls.Clear();
             if (_totalCpuMode)
             {
-                if(_miniChartPanel == null)
+                if (_miniChartPanel == null)
                 {
                     _miniChartPanel = new Panel();
                     _miniChartPanel.Padding = new Padding(1);

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Linq;
 
 namespace HumbleCpuMonitor
 {
@@ -271,6 +272,13 @@ namespace HumbleCpuMonitor
             if (!_totalCpuMode) AllCpuSnapshot();
 
             if (++_cycles % 10 == 0) UpdateTitle();
+            _processes.Update();
+        }
+
+        public ProcessDescriptor[] GetTopProc()
+        {
+            if (_processes.ProcessCount < 3) return null;
+            return _processes.Descriptors.OrderByDescending(p => p.Snapshot.CpuPerc).Take(3).ToArray();
         }
 
         private void UpdateVisualizationMode()

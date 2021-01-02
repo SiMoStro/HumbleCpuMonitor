@@ -13,7 +13,7 @@ namespace HumbleCpuMonitor
         public MachineInfo()
         {
             InitializeComponent();
-            
+
             Snapshot();
 
             _mouseHandler = new MouseMessageFilter(Handle);
@@ -22,7 +22,10 @@ namespace HumbleCpuMonitor
             _timer.Interval = 1000;
             _timer.Tick += HandleTimerTick;
             w_prgPhy.Minimum = w_prgPageFile.Minimum = w_prgCpu.Minimum = 0;
-            w_prgPhy.Maximum = w_prgPageFile.Maximum = w_prgCpu.Maximum = 100;            
+            w_prgPhy.Maximum = w_prgPageFile.Maximum = w_prgCpu.Maximum = 100;
+
+            w_prgProc1.Minimum = w_prgProc2.Minimum = w_prgProc3.Minimum = 0;
+            w_prgProc1.Maximum = w_prgProc2.Maximum = w_prgProc3.Maximum = 100;
         }
 
         private void HandleTimerTick(object sender, EventArgs e)
@@ -32,6 +35,29 @@ namespace HumbleCpuMonitor
 
         private void Snapshot()
         {
+            ProcessDescriptor[] proc = FormMain.Main.GetTopProc();
+            if (proc != null)
+            {
+                w_lblProc1.Text = proc[0].Snapshot.CpuPerc.ToString("#.0");
+                w_lblProc1.Update();
+                w_lblProc2.Text = proc[1].Snapshot.CpuPerc.ToString("#.0");
+                w_lblProc2.Update();
+                w_lblProc3.Text = proc[2].Snapshot.CpuPerc.ToString("#.0");
+                w_lblProc3.Update();
+
+                int p = (int)proc[0].Snapshot.CpuPerc;
+                w_prgProc1.Value = p;
+                w_prgProc1.Text = proc[0].Name;
+
+                p = (int)proc[1].Snapshot.CpuPerc;
+                w_prgProc2.Value = p;
+                w_prgProc2.Text = proc[1].Name;
+
+                p = (int)proc[2].Snapshot.CpuPerc;
+                w_prgProc3.Value = p;
+                w_prgProc3.Text = proc[2].Name;
+            }
+
             Kernel32.GlobalMemoryStatusEx(_mem);
 
             double phy = ((double)_mem.ullAvailPhys / _mem.ullTotalPhys) * 100;
@@ -45,7 +71,7 @@ namespace HumbleCpuMonitor
             w_prgPageFile.Text = (100.0d - cc).ToString("#.00") + "%";
 
             w_prgCpu.Value = (int)FormMain.Main.CpuUsage;
-            w_prgCpu.Text= (FormMain.Main.CpuUsage).ToString("#.00") + "%";
+            w_prgCpu.Text = (FormMain.Main.CpuUsage).ToString("#.00") + "%";
         }
 
         protected override void OnVisibleChanged(EventArgs e)

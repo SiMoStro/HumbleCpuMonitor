@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace HumbleCpuMonitor
@@ -7,6 +8,7 @@ namespace HumbleCpuMonitor
     {
         private int _min, _max, _value;
         private Brush _background, _foreground;
+        private ContentAlignment textAlign = ContentAlignment.TopLeft;
 
         public int Minimum
         {
@@ -85,6 +87,7 @@ namespace HumbleCpuMonitor
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             TabStop = false;
+
             Background = new SolidBrush(Color.FromKnownColor(KnownColor.Control));
             Foreground = new SolidBrush(Color.FromKnownColor(KnownColor.ActiveCaption));
         }
@@ -108,7 +111,7 @@ namespace HumbleCpuMonitor
         /// <param name="e">E.</param>
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            // do nothing
+            e.Graphics.FillRectangle(Background, new RectangleF(0, 0, Width, Height));
         }
 
         /// <summary>
@@ -117,76 +120,89 @@ namespace HumbleCpuMonitor
         /// <param name="e">E.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            Draw();
+            Draw(e.Graphics);
         }
 
-        protected override void WndProc(ref Message m)
+        //protected override void WndProc(ref Message m)
+        //{
+        //    base.WndProc(ref m);
+        //    Debug.WriteLine(m.Msg);
+        //    if (m.Msg == 0x000F) // WM_PAINT
+        //    {
+        //        Draw(null);
+        //    }
+
+        //    if (m.Msg == 0x0014) // WM_ERASEBKGND
+        //    {
+        //        Draw(null);
+        //    }
+        //}
+
+        private void Draw(Graphics g)
         {
-            base.WndProc(ref m);
-            if (m.Msg == 0x000F) // WM_PAINT
+            bool isNew = false; ;
+            Graphics graphics;
+            if (g == null)
             {
-                Draw();
+                isNew = true;
+                graphics = CreateGraphics();
             }
-        }
+            else graphics = g;
 
-        private void Draw()
-        {
-            using (Graphics graphics = CreateGraphics())
+            float delta1 = (Maximum - Minimum);
+            float delta2 = (Value - Minimum);
+            float rect = (Width * delta2) / delta1;
+            graphics.FillRectangle(Background, new RectangleF(0, 0, Width, Height));
+            graphics.FillRectangle(_foreground, new RectangleF(0, 0, rect, Height));
+            using (SolidBrush brush = new SolidBrush(ForeColor))
             {
-                float delta1 = (Maximum - Minimum);
-                float delta2 = (Value - Minimum);
-                float rect = (Width * delta2) / delta1;
-                graphics.FillRectangle(Background, new RectangleF(0, 0, Width, Height));
-                graphics.FillRectangle(_foreground, new RectangleF(0, 0, rect, Height));
-                using (SolidBrush brush = new SolidBrush(ForeColor))
+                SizeF size = graphics.MeasureString(Text, Font);
+
+                // first figure out the top
+                float top = 0;
+                switch (textAlign)
                 {
-                    SizeF size = graphics.MeasureString(Text, Font);
-
-                    // first figure out the top
-                    float top = 0;
-                    switch (textAlign)
-                    {
-                        case ContentAlignment.MiddleLeft:
-                        case ContentAlignment.MiddleCenter:
-                        case ContentAlignment.MiddleRight:
-                            top = (Height - size.Height) / 2;
-                            break;
-                        case ContentAlignment.BottomLeft:
-                        case ContentAlignment.BottomCenter:
-                        case ContentAlignment.BottomRight:
-                            top = Height - size.Height;
-                            break;
-                    }
-
-                    float left = -1;
-                    switch (textAlign)
-                    {
-                        case ContentAlignment.TopLeft:
-                        case ContentAlignment.MiddleLeft:
-                        case ContentAlignment.BottomLeft:
-                            if (RightToLeft == RightToLeft.Yes)
-                                left = Width - size.Width;
-                            else
-                                left = -1;
-                            break;
-                        case ContentAlignment.TopCenter:
-                        case ContentAlignment.MiddleCenter:
-                        case ContentAlignment.BottomCenter:
-                            left = (Width - size.Width) / 2;
-                            break;
-                        case ContentAlignment.TopRight:
-                        case ContentAlignment.MiddleRight:
-                        case ContentAlignment.BottomRight:
-                            if (RightToLeft == RightToLeft.Yes)
-                                left = -1;
-                            else
-                                left = Width - size.Width;
-                            break;
-                    }
-                    graphics.DrawString(Text, Font, brush, left, top);
+                    case ContentAlignment.MiddleLeft:
+                    case ContentAlignment.MiddleCenter:
+                    case ContentAlignment.MiddleRight:
+                        top = (Height - size.Height) / 2;
+                        break;
+                    case ContentAlignment.BottomLeft:
+                    case ContentAlignment.BottomCenter:
+                    case ContentAlignment.BottomRight:
+                        top = Height - size.Height;
+                        break;
                 }
+
+                float left = -1;
+                switch (textAlign)
+                {
+                    case ContentAlignment.TopLeft:
+                    case ContentAlignment.MiddleLeft:
+                    case ContentAlignment.BottomLeft:
+                        if (RightToLeft == RightToLeft.Yes)
+                            left = Width - size.Width;
+                        else
+                            left = -1;
+                        break;
+                    case ContentAlignment.TopCenter:
+                    case ContentAlignment.MiddleCenter:
+                    case ContentAlignment.BottomCenter:
+                        left = (Width - size.Width) / 2;
+                        break;
+                    case ContentAlignment.TopRight:
+                    case ContentAlignment.MiddleRight:
+                    case ContentAlignment.BottomRight:
+                        if (RightToLeft == RightToLeft.Yes)
+                            left = -1;
+                        else
+                            left = Width - size.Width;
+                        break;
+                }
+                graphics.DrawString(Text, Font, brush, left, top);
             }
-            
+
+            if(isNew) graphics.Dispose();
         }
 
         /// <summary>
@@ -205,7 +221,8 @@ namespace HumbleCpuMonitor
             {
                 if (base.Text == value) return;
                 base.Text = value;
-                RecreateHandle();
+                Invalidate();
+                //RecreateHandle();
             }
         }
 
@@ -228,7 +245,8 @@ namespace HumbleCpuMonitor
             set
             {
                 base.RightToLeft = value;
-                RecreateHandle();
+                Invalidate();
+                //RecreateHandle();
             }
         }
 
@@ -248,11 +266,10 @@ namespace HumbleCpuMonitor
             set
             {
                 base.Font = value;
-                RecreateHandle();
+                Invalidate();
+                //RecreateHandle();
             }
         }
-
-        private ContentAlignment textAlign = ContentAlignment.TopLeft;
 
         /// <summary>
         /// Gets or sets the text alignment.
@@ -263,7 +280,8 @@ namespace HumbleCpuMonitor
             set
             {
                 textAlign = value;
-                RecreateHandle();
+                Invalidate();
+                //RecreateHandle();
             }
         }
     }

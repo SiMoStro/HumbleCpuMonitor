@@ -9,6 +9,7 @@ namespace HumbleCpuMonitor
         private Timer _timer = new Timer();
         private MEMORYSTATUSEX _mem = new MEMORYSTATUSEX();
         private MouseMessageFilter _mouseHandler;
+        private long _counter;
 
         public MachineInfo()
         {
@@ -30,19 +31,39 @@ namespace HumbleCpuMonitor
 
         private void HandleTimerTick(object sender, EventArgs e)
         {
+            _counter++;
             Snapshot();
         }
 
         private void Snapshot()
         {
+            if(_counter % 3 == 0) SnapProcesses();
+
+            Kernel32.GlobalMemoryStatusEx(_mem);
+            double phy = ((double)_mem.ullAvailPhys / _mem.ullTotalPhys) * 100;
+            double availPhy = Math.Ceiling(phy);
+            w_prgPhy.Value = 100 - (int)availPhy;
+            w_prgPhy.Text = (100.0d - phy).ToString("0.00") + "%";
+
+            double cc = ((double)_mem.ullAvailPageFile / _mem.ullTotalPageFile) * 100;
+            double availPageFile = Math.Ceiling(cc);
+            w_prgPageFile.Value = 100 - (int)availPageFile;
+            w_prgPageFile.Text = (100.0d - cc).ToString("0.00") + "%";
+
+            w_prgCpu.Value = (int)FormMain.Main.CpuUsage;
+            w_prgCpu.Text = (FormMain.Main.CpuUsage).ToString("0.00") + "%";
+        }
+
+        private void SnapProcesses()
+        {
             ProcessDescriptor[] proc = FormMain.Main.GetTopProc();
             if (proc != null)
             {
-                w_lblProc1.Text = proc[0].Snapshot.CpuPerc.ToString("#.0");
+                w_lblProc1.Text = proc[0].Snapshot.CpuPerc.ToString("0.0");
                 w_lblProc1.Update();
-                w_lblProc2.Text = proc[1].Snapshot.CpuPerc.ToString("#.0");
+                w_lblProc2.Text = proc[1].Snapshot.CpuPerc.ToString("0.0");
                 w_lblProc2.Update();
-                w_lblProc3.Text = proc[2].Snapshot.CpuPerc.ToString("#.0");
+                w_lblProc3.Text = proc[2].Snapshot.CpuPerc.ToString("0.0");
                 w_lblProc3.Update();
 
                 int p = (int)proc[0].Snapshot.CpuPerc;
@@ -57,21 +78,6 @@ namespace HumbleCpuMonitor
                 w_prgProc3.Value = p;
                 w_prgProc3.Text = proc[2].Name;
             }
-
-            Kernel32.GlobalMemoryStatusEx(_mem);
-
-            double phy = ((double)_mem.ullAvailPhys / _mem.ullTotalPhys) * 100;
-            double availPhy = Math.Ceiling(phy);
-            w_prgPhy.Value = 100 - (int)availPhy;
-            w_prgPhy.Text = (100.0d - phy).ToString("#.00") + "%";
-
-            double cc = ((double)_mem.ullAvailPageFile / _mem.ullTotalPageFile) * 100;
-            double availPageFile = Math.Ceiling(cc);
-            w_prgPageFile.Value = 100 - (int)availPageFile;
-            w_prgPageFile.Text = (100.0d - cc).ToString("#.00") + "%";
-
-            w_prgCpu.Value = (int)FormMain.Main.CpuUsage;
-            w_prgCpu.Text = (FormMain.Main.CpuUsage).ToString("#.00") + "%";
         }
 
         protected override void OnVisibleChanged(EventArgs e)

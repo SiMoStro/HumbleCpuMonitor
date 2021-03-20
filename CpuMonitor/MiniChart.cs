@@ -16,8 +16,6 @@ namespace HumbleCpuMonitor
 
         #endregion
 
-        internal Action<MiniChart> DoubleClickAction { get; set; }
-
         internal MiniChart()
         {
             DoubleBuffered = true;
@@ -38,12 +36,6 @@ namespace HumbleCpuMonitor
         {
             _values.Clear();
             Invalidate();
-        }
-
-        protected override void OnMouseDoubleClick(MouseEventArgs e)
-        {
-            base.OnMouseDoubleClick(e);
-            DoubleClickAction?.Invoke(this);
         }
 
         protected override void OnPaint(PaintEventArgs e)

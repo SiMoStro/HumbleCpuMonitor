@@ -1,5 +1,6 @@
 ﻿using HumbleCpuMonitor.Win32;
 using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace HumbleCpuMonitor
@@ -27,6 +28,14 @@ namespace HumbleCpuMonitor
 
             w_prgProc1.Minimum = w_prgProc2.Minimum = w_prgProc3.Minimum = 0;
             w_prgProc1.Maximum = w_prgProc2.Maximum = w_prgProc3.Maximum = 100;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            Application.RemoveMessageFilter(_mouseHandler);
+            _mouseHandler = null;
         }
 
         private void HandleTimerTick(object sender, EventArgs e)

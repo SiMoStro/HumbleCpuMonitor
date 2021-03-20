@@ -292,7 +292,7 @@ namespace HumbleCpuMonitor
                     _miniChartPanel.Padding = new Padding(1);
                     _miniChart.Margin = new Padding(2);
                     _miniChart.Dock = DockStyle.Fill;
-                    _miniChart.DoubleClickAction = MiniChartDoubleClick;
+                    _miniChart.DoubleClick += HandleMiniChartDoubleClick;
                     _miniChartPanel.Controls.Add(_miniChart);
                     _miniChartPanel.Dock = DockStyle.Fill;
                 }
@@ -324,7 +324,7 @@ namespace HumbleCpuMonitor
                     {
                         _miniChartCpuId[cpu].Dock = DockStyle.Fill;
                         _miniChartCpuId[cpu].Margin = new Padding(1);
-                        _miniChartCpuId[cpu].DoubleClickAction = SplittedChartsDoubleClick;
+                        _miniChartCpuId[cpu].DoubleClick += HandleSplittedChartsDoubleClick;
                         _multiCpuPanel.Controls.Add(_miniChartCpuId[cpu], cpu % _multiCpuPanel.ColumnCount, cpu / _multiCpuPanel.ColumnCount);
                     }
                 }
@@ -333,14 +333,26 @@ namespace HumbleCpuMonitor
             }
         }
 
-        private void SplittedChartsDoubleClick(MiniChart mc)
+        private void HandleSplittedChartsDoubleClick(object sender, EventArgs e)
         {
             foreach (MiniChart chart in _miniChartCpuId) chart.Restart();
         }
 
-        private void MiniChartDoubleClick(MiniChart mc)
+        private MouseMessageFilter _mouseHandler;
+        private void HandleMiniChartDoubleClick(object sender, EventArgs e)
         {
-            _miniChart.Restart();
+            if(ModifierKeys.HasFlag(Keys.Control))
+            {
+                FormBorderStyle = (FormBorderStyle == FormBorderStyle.Sizable) ? FormBorderStyle.None : FormBorderStyle = FormBorderStyle.Sizable;
+                _mouseHandler = new MouseMessageFilter(Handle);
+                Application.AddMessageFilter(_mouseHandler);
+            }
+            else
+            {
+                _miniChart.Restart();
+                Application.RemoveMessageFilter(_mouseHandler);
+                _mouseHandler = null;
+            }            
         }
 
         private void TotalCpuSnapshot()

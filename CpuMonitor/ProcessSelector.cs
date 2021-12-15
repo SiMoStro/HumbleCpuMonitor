@@ -16,6 +16,7 @@ namespace HumbleCpuMonitor
         {
             InitializeComponent();
             _tbFilter.TextChanged += HandleFilterChanged;
+            _tbFilter.Select();
         }
 
         private void HandleFilterChanged(object sender, EventArgs e)

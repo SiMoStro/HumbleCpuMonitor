@@ -20,6 +20,9 @@ namespace HumbleCpuMonitor
         private long _cycles;
         private Process _process;
 
+        private float _max;
+        private DateTime _processStart;
+
         #endregion
 
         public double LastKernelPct
@@ -56,6 +59,7 @@ namespace HumbleCpuMonitor
             _process = Process.GetProcessById(pid);
             _process.EnableRaisingEvents = true;
             _process.Exited += HandleProcessExited;
+            _processStart = _process.StartTime;
             _chart.Dock = DockStyle.Fill;
 
             InitForm();
@@ -145,15 +149,31 @@ namespace HumbleCpuMonitor
             _lastUt = ku.Item2;
             _lastSnapshotTime = time;
 
-            _chart.AddValue((float)(LastKernelPct + LastUserPct) * 100);
+            float pct = (float)(LastKernelPct + LastUserPct) * 100;
+            if (pct > _max) _max = pct;
+            _chart.AddValue(pct);
 
             if (++_cycles % 10 == 0) UpdateTitle();
         }
 
+        DateTime? _prevTitleUpdate;
+        double _prevCpuTime;
         private void UpdateTitle()
         {
             _process.Refresh();
-            _form.Text = _name + " (WrkSet: " + Utilities.FormatBytes(_process.WorkingSet64) + ")";
+            var currentCpuTime = _process.TotalProcessorTime.TotalMilliseconds;
+            double avg = 0d;
+            if(_prevTitleUpdate.HasValue)
+            {
+                double deltaTime = DateTime.UtcNow.Subtract(_prevTitleUpdate.Value).TotalMilliseconds;
+                avg = ((currentCpuTime - _prevCpuTime) / deltaTime) * 100;
+            }
+
+            _form.Text = _name + $" (WrkSet: {Utilities.FormatBytes(_process.WorkingSet64)}; Max {_max.ToString("#.00")}% Avg {avg.ToString("#.00")}%)";
+
+            _max = 0;
+            _prevTitleUpdate = DateTime.UtcNow;
+            _prevCpuTime = currentCpuTime;
         }
 
         private Tuple<double, double> GetSnapshot()

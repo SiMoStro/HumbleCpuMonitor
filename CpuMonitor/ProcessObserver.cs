@@ -169,7 +169,7 @@ namespace HumbleCpuMonitor
                 avg = ((currentCpuTime - _prevCpuTime) / deltaTime) * 100;
             }
 
-            _form.Text = _name + $" (WrkSet: {Utilities.FormatBytes(_process.WorkingSet64)}; Max {_max.ToString("#.00")}% Avg {avg.ToString("#.00")}%)";
+            _form.Text = $" {_name} (WrkSet: {Utilities.FormatBytes(_process.WorkingSet64)}; last interval CPU: Max {_max.ToString("#.00")}% Avg {avg.ToString("#.00")}%)";
 
             _max = 0;
             _prevTitleUpdate = DateTime.UtcNow;

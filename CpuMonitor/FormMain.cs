@@ -83,7 +83,7 @@ namespace HumbleCpuMonitor
             UpdateTitle();
 
             _icons = new Icon[15];
-            _miniChart = new MiniChart();
+            _miniChart = new MiniChart { HorizontalLines = 9 };
 
             Application.ApplicationExit += HandleApplicationExit;
 

@@ -16,9 +16,15 @@ namespace HumbleCpuMonitor
 
         #endregion
 
+        /// <summary>
+        /// Number of horizontal line
+        /// </summary>
+        public int HorizontalLines { get; set; }
+
         internal MiniChart()
         {
             DoubleBuffered = true;
+            HorizontalLines = 3;
             _horLinePen = new Pen(new SolidBrush(Color.FromArgb(128, 64, 64, 64)), 0.25f);
         }
 
@@ -48,8 +54,8 @@ namespace HumbleCpuMonitor
             e.Graphics.Clear(Color.Black);
 
             // horizontal lines
-            float h1 = (float)Height / 4;
-            for(int l = 1; l < 4; l++) e.Graphics.DrawLine(_horLinePen, 0, h1 * l, Width, h1 * l);
+            float h1 = (float)Height / (HorizontalLines + 1);
+            for(int l = 1; l < HorizontalLines + 1; l++) e.Graphics.DrawLine(_horLinePen, 0, h1 * l, Width, h1 * l);
 
             // chart bars
             if (_values.Count == 0) return;

@@ -15,7 +15,9 @@ namespace HumbleCpuMonitor
                 return false;
             };
 
+            //
             // First pass: get current privilege settings
+            //
             Luid luid = new Luid();
             res = Advapi32.LookupPrivilegeValue(null, "SeDebugPrivilege", ref luid);
             TokenPrivileges tp1 = new TokenPrivileges
@@ -36,13 +38,15 @@ namespace HumbleCpuMonitor
             };
 
             // 
-            // Second pass: set privilege based on previous setting
+            // Second pass: set privilege based on setting previously read
             // 
             tPrev.PrivilegeCount = 1;
             tPrev.Privileges[0].Luid = luid;
             tPrev.Privileges[0].Attributes |= SePrivilege.PrivilegeEnabled;
 
             res = Advapi32.AdjustTokenPrivileges(handle, false, ref tPrev, retSize, IntPtr.Zero, IntPtr.Zero);
+
+            Kernel32.CloseHandle(handle);
 
             return res;
 

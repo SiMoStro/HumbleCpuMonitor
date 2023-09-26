@@ -1,6 +1,8 @@
 ﻿using HumbleCpuMonitor.Win32;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace HumbleCpuMonitor
@@ -11,6 +13,7 @@ namespace HumbleCpuMonitor
         private MEMORYSTATUSEX _mem = new MEMORYSTATUSEX();
         private MouseMessageFilter _mouseHandler;
         private long _counter;
+        private bool _isLight;
 
         public MachineInfo()
         {
@@ -19,6 +22,7 @@ namespace HumbleCpuMonitor
             Snapshot();
 
             _mouseHandler = new MouseMessageFilter(Handle);
+            _mouseHandler.LeftButtonDoubleClick = HandleLeftDoubleClick;
             Application.AddMessageFilter(_mouseHandler);
 
             _timer.Interval = 1000;
@@ -28,6 +32,52 @@ namespace HumbleCpuMonitor
 
             w_prgProc1.Minimum = w_prgProc2.Minimum = w_prgProc3.Minimum = 0;
             w_prgProc1.Maximum = w_prgProc2.Maximum = w_prgProc3.Maximum = 100;
+            _isLight = false;
+            SetColors();
+        }
+
+        private void HandleLeftDoubleClick()
+        {
+            _isLight = !_isLight;
+            SetColors();
+        }
+
+        private void SetColors()
+        {
+            List<CustomProgressBar> pbs = new List<CustomProgressBar> { w_prgCpu, w_prgPageFile, w_prgPhy, w_prgProc1, w_prgProc2, w_prgProc3 };
+            List<Label> lbls = new List<Label> { w_lblCC, w_lblCpu, w_lblPhy, w_lblProc1, w_lblProc2, w_lblProc3 };
+
+            Color txt;
+            Color bckGround;
+            Brush bckPbar;
+            Brush forePbar;
+            if (_isLight)
+            {
+                txt = Color.Black;
+                bckGround = Color.FromKnownColor(KnownColor.Control);
+                forePbar = Brushes.LightGreen;
+                bckPbar = new SolidBrush(bckGround);
+            }
+            else
+            {
+                txt = Color.WhiteSmoke;
+                bckGround = Color.Black;
+                forePbar = Brushes.DarkGreen;
+                bckPbar = Brushes.Black;
+            }
+
+            BackColor = bckGround;
+            foreach (var lbl in lbls)
+            {
+                lbl.ForeColor = txt;
+            }
+
+            foreach (var pb in pbs)
+            {
+                pb.ForeColor = txt;
+                pb.Background = bckPbar;
+                pb.Foreground = forePbar;
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)

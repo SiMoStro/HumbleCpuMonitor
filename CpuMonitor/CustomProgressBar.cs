@@ -153,7 +153,7 @@ namespace HumbleCpuMonitor
             float delta2 = (Value - Minimum);
             float rect = (Width * delta2) / delta1;
             graphics.FillRectangle(Background, new RectangleF(0, 0, Width, Height));
-            graphics.FillRectangle(_foreground, new RectangleF(0, 0, rect, Height));
+            graphics.FillRectangle(Foreground, new RectangleF(0, 0, rect, Height));
             using (SolidBrush brush = new SolidBrush(ForeColor))
             {
                 SizeF size = graphics.MeasureString(Text, Font);

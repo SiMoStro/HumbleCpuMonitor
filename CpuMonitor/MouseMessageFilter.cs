@@ -8,15 +8,18 @@ namespace HumbleCpuMonitor
 {
     public class MouseMessageFilter : IMessageFilter
     {
+        // private const int WM_MOUSEMOVE = 0x200;
         private const int WM_LBUTTONDOWN = 0x201;
         // private const int WM_LBUTTONUP = 0x202;
-        // private const int WM_MOUSEMOVE = 0x200;
+        private const int WM_LBUTTONDBLCLK = 0x0203;
 
         private IntPtr _winHandle;
         private RECT? _rectMouseDown;
         private Point _mouseDown;
 
         private GlobalMouseHook _globalHook;
+
+        public Action LeftButtonDoubleClick { get; set; }
 
         public MouseMessageFilter(IntPtr handle)
         {
@@ -50,16 +53,19 @@ namespace HumbleCpuMonitor
 
             IntPtr parent = GetAncestor(m.HWnd, GetAncestorFlags.GetRoot);
             if (parent == IntPtr.Zero) return false;
+            if (parent != _winHandle) return false;
 
             if (m.Msg == WM_LBUTTONDOWN)
             {
-                if (parent != _winHandle) return false;
-
                 RECT r;
                 GetWindowRect(_winHandle, out r);
                 _rectMouseDown = r;
                 _mouseDown = Cursor.Position;
                 _globalHook.Start();
+            }
+            else if (m.Msg == WM_LBUTTONDBLCLK)
+            {
+                LeftButtonDoubleClick?.Invoke();
             }
 
             return false;

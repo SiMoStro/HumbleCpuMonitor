@@ -12,10 +12,17 @@ namespace HumbleCpuMonitor
         public int SelectedPid { get; private set; }
 
         public string SelectedProcessExecutable { get; private set; }
+
         public ProcessSelector()
         {
             InitializeComponent();
             _tbFilter.TextChanged += HandleFilterChanged;
+            _tbFilter.Select();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
             _tbFilter.Select();
         }
 

@@ -6,10 +6,12 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Linq;
+using HumbleCpuMonitor.Charts;
+using HumbleCpuMonitor.Process;
 
 namespace HumbleCpuMonitor
 {
-    public partial class FormMain : Form
+    internal partial class FormMain : Form
     {
         #region [private]
 
@@ -18,9 +20,10 @@ namespace HumbleCpuMonitor
         private PerformanceCounter[] _cpuIdCounter;
         private bool _allowsHowDisplay = false;
         private Icon[] _icons;
+        private int _iconSelectionStep;
         private float _cpuUsage;
         private int _cpuIconIndex;
-        private const int StepSize = 7;
+        private ChartType _chartMode;
 
         private ContextMenu _menu;
         private MenuItem _miExitMenu;
@@ -33,15 +36,18 @@ namespace HumbleCpuMonitor
         private MenuItem _miUpdThreeSeconds;
         private MenuItem _miMachineInfo;
 
+        private MenuItem _miUseBarChart;
+        private MenuItem _miUseLineChart;
+
         private ProcessSelector _processSelector;
 
         private MenuItem _selectProcess;
 
         private int _processors;
 
-        private MiniChart _miniChart;
+        private MiniChartBase _miniChart;
         private Panel _miniChartPanel;
-        private MiniChart[] _miniChartCpuId;
+        private MiniChartBase[] _miniChartCpuId;
         private bool _internalExit;
         private Timer _timer;
         private bool _totalCpuMode;
@@ -51,7 +57,7 @@ namespace HumbleCpuMonitor
         private TableLayoutPanel _multiCpuPanel;
 
         private Processes _processes;
-        private Process _self;
+        private System.Diagnostics.Process _self;
 
         MachineInfo _machineInfo;
 
@@ -77,23 +83,21 @@ namespace HumbleCpuMonitor
             Main = this;
 
             SuperPower.Enable();
-            _self = Process.GetCurrentProcess();
+            _self = System.Diagnostics.Process.GetCurrentProcess();
 
             _processes = new Processes();
             UpdateTitle();
 
             _icons = new Icon[15];
-            _miniChart = new MiniChart { HorizontalLines = 9 };
+            _iconSelectionStep = 100 / 15;
 
             Application.ApplicationExit += HandleApplicationExit;
 
             _processors = Environment.ProcessorCount;
             _cpuIdCounter = new PerformanceCounter[_processors];
-            _miniChartCpuId = new MiniChart[_processors];
             for (int p = 0; p < _processors; p++)
             {
                 _cpuIdCounter[p] = new PerformanceCounter("Processor", "% Processor Time", p.ToString());
-                _miniChartCpuId[p] = new MiniChart();
             }
 
             _theCPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
@@ -105,11 +109,51 @@ namespace HumbleCpuMonitor
             UpdateTrayIcon();
 
             _totalCpuMode = true;
-            UpdateVisualizationMode();
+            UseBarChart();
 
             _timer = new Timer { Interval = 1000 };
             _timer.Tick += HandleTick;
             _timer.Start();
+        }
+
+        private void RebuildCharts()
+        {
+            MiniChartBase oldChart = _miniChart;
+            MiniChartBase[] oldGridChart = _miniChartCpuId;
+
+            switch (_chartMode)
+            {
+                case ChartType.Bar:
+                    _miniChart = new MiniBarChart { HorizontalLines = 9 };
+                    _miniChartCpuId = new MiniBarChart[_processors];
+                    for (int p = 0; p < _processors; p++)
+                    {
+                        _miniChartCpuId[p] = new MiniBarChart();
+                    }
+                    break;
+                case ChartType.Line:
+                    _miniChart = new MiniLineChart { HorizontalLines = 9 };
+                    _miniChartCpuId = new MiniLineChart[_processors];
+                    for (int p = 0; p < _processors; p++)
+                    {
+                        _miniChartCpuId[p] = new MiniLineChart();
+                    }
+                    break;
+            }
+            if(oldChart != null)
+            {
+                _miniChart.InitValues(oldChart.Values);
+            }
+            
+            if(oldGridChart != null)
+            {
+                for (int p = 0; p < _processors; p++)
+                {
+                    _miniChartCpuId[p].InitValues(oldGridChart[p].Values);
+                }
+            }
+
+            UpdateVisualizationMode(false);
         }
 
         private void UpdateTitle()
@@ -167,6 +211,14 @@ namespace HumbleCpuMonitor
             _miUpdThreeSeconds = new MenuItem("3 second");
             _miUpdThreeSeconds.Click += (o, e) => _timer.Interval = 3000;
 
+            MenuItem cType = new MenuItem("Chart type");
+            _miUseBarChart = new MenuItem("Bar chart");
+            _miUseBarChart.Click += (o, e) => UseBarChart();
+            _miUseLineChart = new MenuItem("Line chart");
+            _miUseLineChart.Click += (o, e) => UseLineChart();
+            cType.MenuItems.Add(_miUseBarChart);
+            cType.MenuItems.Add(_miUseLineChart);
+
             _miToggleSingleCpuMenu = new MenuItem();
             _miToggleSingleCpuMenu.Click += (o, e) =>
             {
@@ -210,6 +262,7 @@ namespace HumbleCpuMonitor
 
             _menu.MenuItems.Add(_miToggleShowHideMenu);
             _menu.MenuItems.Add(upd);
+            _menu.MenuItems.Add(cType);
             _menu.MenuItems.Add(_miToggleSingleCpuMenu);
             _menu.MenuItems.Add(_selectProcess);
             _menu.MenuItems.Add(_miMachineInfo);
@@ -223,6 +276,22 @@ namespace HumbleCpuMonitor
                 _selectProcess.Enabled = (_processSelector == null);
             };
             _trayIcon.ContextMenu = _menu;
+        }
+
+        private void UseLineChart()
+        {
+            _miUseBarChart.Checked = false;
+            _miUseLineChart.Checked = true;
+            _chartMode = ChartType.Line;
+            RebuildCharts();
+        }
+
+        private void UseBarChart()
+        {
+            _miUseBarChart.Checked = true;
+            _miUseLineChart.Checked = false;
+            _chartMode = ChartType.Bar;
+            RebuildCharts();
         }
 
         private void HandleProcessSelectorClosed(object sender, FormClosedEventArgs e)
@@ -281,61 +350,71 @@ namespace HumbleCpuMonitor
             return _processes.Descriptors.OrderByDescending(p => p.Snapshot.CpuPerc).Take(3).ToArray();
         }
 
-        private void UpdateVisualizationMode()
+        private void UpdateVisualizationMode(bool restart = true)
         {
             Controls.Clear();
             if (_totalCpuMode)
             {
                 if (_miniChartPanel == null)
                 {
-                    _miniChartPanel = new Panel();
-                    _miniChartPanel.Padding = new Padding(1);
-                    _miniChart.Margin = new Padding(2);
-                    _miniChart.Dock = DockStyle.Fill;
-                    _miniChart.DoubleClick += HandleMiniChartDoubleClick;
-                    _miniChartPanel.Controls.Add(_miniChart);
-                    _miniChartPanel.Dock = DockStyle.Fill;
+                    _miniChartPanel = new Panel
+                    {
+                        Padding = new Padding(1)
+                    };
                 }
-                _miniChart.Restart();
+                _miniChartPanel.Controls.Clear();
+                _miniChart.Margin = new Padding(2);
+                _miniChart.Dock = DockStyle.Fill;
+                _miniChart.DoubleClick += HandleMiniChartDoubleClick;
+                _miniChartPanel.Controls.Add(_miniChart);
+                _miniChartPanel.Dock = DockStyle.Fill;
+                if(restart) _miniChart.Restart();
                 Controls.Add(_miniChartPanel);
             }
             else
             {
                 if (_multiCpuPanel == null)
                 {
-                    _multiCpuPanel = new TableLayoutPanel();
-                    _multiCpuPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
-                    _multiCpuPanel.Dock = DockStyle.Fill;
-                    _multiCpuPanel.RowCount = 2;
-                    _multiCpuPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-                    _multiCpuPanel.ColumnCount = _processors / 2;
-
-                    for (int row = 0; row < _multiCpuPanel.RowCount; row++)
+                    _multiCpuPanel = new TableLayoutPanel
                     {
-                        _multiCpuPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100 / _multiCpuPanel.RowCount));
-                    }
-
-                    for (int col = 0; col < _multiCpuPanel.ColumnCount; col++)
-                    {
-                        _multiCpuPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / _multiCpuPanel.ColumnCount));
-                    }
-
-                    for (int cpu = 0; cpu < _processors; cpu++)
-                    {
-                        _miniChartCpuId[cpu].Dock = DockStyle.Fill;
-                        _miniChartCpuId[cpu].Margin = new Padding(1);
-                        _miniChartCpuId[cpu].DoubleClick += HandleSplittedChartsDoubleClick;
-                        _multiCpuPanel.Controls.Add(_miniChartCpuId[cpu], cpu % _multiCpuPanel.ColumnCount, cpu / _multiCpuPanel.ColumnCount);
-                    }
+                        CellBorderStyle = TableLayoutPanelCellBorderStyle.None,
+                        Dock = DockStyle.Fill,
+                        RowCount = 2,
+                        AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                        ColumnCount = _processors / 2
+                    };
                 }
-                foreach (MiniChart chart in _miniChartCpuId) chart.Restart();
+
+                _multiCpuPanel.Controls.Clear();
+                for (int row = 0; row < _multiCpuPanel.RowCount; row++)
+                {
+                    _multiCpuPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100 / _multiCpuPanel.RowCount));
+                }
+
+                for (int col = 0; col < _multiCpuPanel.ColumnCount; col++)
+                {
+                    _multiCpuPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / _multiCpuPanel.ColumnCount));
+                }
+
+                for (int cpu = 0; cpu < _processors; cpu++)
+                {
+                    _miniChartCpuId[cpu].Dock = DockStyle.Fill;
+                    _miniChartCpuId[cpu].Margin = new Padding(1);
+                    _miniChartCpuId[cpu].DoubleClick += HandleSplittedChartsDoubleClick;
+                    _multiCpuPanel.Controls.Add(_miniChartCpuId[cpu], cpu % _multiCpuPanel.ColumnCount, cpu / _multiCpuPanel.ColumnCount);
+                }
+
+                if (restart)
+                {
+                    foreach (MiniChartBase chart in _miniChartCpuId) chart.Restart();
+                }
                 Controls.Add(_multiCpuPanel);
             }
         }
 
         private void HandleSplittedChartsDoubleClick(object sender, EventArgs e)
         {
-            foreach (MiniChart chart in _miniChartCpuId) chart.Restart();
+            foreach (MiniBarChart chart in _miniChartCpuId) chart.Restart();
         }
 
         private MouseMessageFilter _mouseHandler;
@@ -358,9 +437,16 @@ namespace HumbleCpuMonitor
         private void TotalCpuSnapshot()
         {
             _cpuUsage = _theCPUCounter.NextValue();
-            _cpuIconIndex = (int)Math.Floor(_cpuUsage / 7);
+            _cpuIconIndex = (int)Math.Floor(_cpuUsage / _iconSelectionStep);
             if (_cpuIconIndex > 14) _cpuIconIndex = 14;
-            _trayIcon.Text = (_cpuUsage / 100).ToString("P");
+            string trayText = (_cpuUsage / 100).ToString("P");
+
+            var topProcs = _processes.GetTopProcessesByCpu(3);
+            foreach(var proc in topProcs)
+            {
+                trayText += $"{Environment.NewLine}{proc.Name}";
+            }
+            _trayIcon.Text = trayText.Substring(0, Math.Min(trayText.Length, 63));
             UpdateTrayIcon();
 
             if (_totalCpuMode) _miniChart.AddValue(_cpuUsage);

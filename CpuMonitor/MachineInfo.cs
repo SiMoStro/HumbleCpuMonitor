@@ -1,4 +1,5 @@
-﻿using HumbleCpuMonitor.Win32;
+﻿using HumbleCpuMonitor.Process;
+using HumbleCpuMonitor.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

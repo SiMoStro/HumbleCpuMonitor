@@ -24,7 +24,7 @@ namespace HumbleCpuMonitor
 
         private IntPtr SetHook(LowLevelMouseProc proc)
         {
-            using (Process curProcess = Process.GetCurrentProcess())
+            using (System.Diagnostics.Process curProcess = System.Diagnostics.Process.GetCurrentProcess())
             {
                 using (ProcessModule curModule = curProcess.MainModule)
                 {

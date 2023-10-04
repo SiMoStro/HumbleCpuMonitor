@@ -418,11 +418,34 @@ namespace HumbleCpuMonitor
         }
 
         private MouseMessageFilter _mouseHandler;
+        int? _borderSize = null;
+        int? _captionSize = null;
+
         private void HandleMiniChartDoubleClick(object sender, EventArgs e)
         {
             if(ModifierKeys.HasFlag(Keys.Control))
             {
-                FormBorderStyle = (FormBorderStyle == FormBorderStyle.Sizable) ? FormBorderStyle.None : FormBorderStyle = FormBorderStyle.Sizable;
+                FormBorderStyle currentStyle = FormBorderStyle;
+                if(currentStyle == FormBorderStyle.Sizable)
+                {   // switch to no border
+                    _borderSize = Math.Max(0, ((Size.Width - ClientSize.Width) / 2));
+                    _captionSize = Size.Height - ClientSize.Height - _borderSize.Value;
+                    int x = Location.X + _borderSize.Value;
+                    int y = Location.Y + _captionSize.Value;
+                    FormBorderStyle = FormBorderStyle.None;
+                    Location = new Point(x, y);
+                }
+                else
+                {   // switch to border
+                    if(_borderSize.HasValue && _captionSize.HasValue)
+                    {
+                        int x = Location.X - _borderSize.Value;
+                        int y = Location.Y - _captionSize.Value;
+                        _borderSize = _captionSize = null;
+                        Location = new Point(x, y);
+                    }
+                    FormBorderStyle = FormBorderStyle.Sizable;
+                }
                 _mouseHandler = new MouseMessageFilter(Handle);
                 Application.AddMessageFilter(_mouseHandler);
             }

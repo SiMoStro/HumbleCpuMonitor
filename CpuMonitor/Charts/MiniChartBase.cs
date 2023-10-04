@@ -122,7 +122,8 @@ namespace HumbleCpuMonitor.Charts
             if (value > 70) return Brushes.Orange;
             if (value > 50) return Brushes.Yellow;
             if (value > 30) return Brushes.YellowGreen;
-            return Brushes.LawnGreen;
+            if (value > 10) return Brushes.LawnGreen;
+            return Brushes.Cyan;
         }
 
         protected Pen GetPen(float value)
@@ -131,7 +132,8 @@ namespace HumbleCpuMonitor.Charts
             if (value > 70) return Pens.Orange;
             if (value > 50) return Pens.Yellow;
             if (value > 30) return Pens.YellowGreen;
-            return Pens.LawnGreen;
+            if (value > 10) return Pens.LawnGreen;
+            return Pens.Cyan;
         }
     }
 }

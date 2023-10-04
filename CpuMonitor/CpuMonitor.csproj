@@ -60,6 +60,9 @@
     <Compile Include="Charts\MiniLineChart.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Charts\MiniScatterChart.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>

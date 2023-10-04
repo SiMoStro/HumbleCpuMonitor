@@ -38,6 +38,7 @@ namespace HumbleCpuMonitor
 
         private MenuItem _miUseBarChart;
         private MenuItem _miUseLineChart;
+        private MenuItem _miUseScatterChart;
 
         private ProcessSelector _processSelector;
 
@@ -123,6 +124,14 @@ namespace HumbleCpuMonitor
 
             switch (_chartMode)
             {
+                case ChartType.Scatter:
+                    _miniChart = new MiniScatterChart { HorizontalLines = 9 };
+                    _miniChartCpuId = new MiniScatterChart[_processors];
+                    for (int p = 0; p < _processors; p++)
+                    {
+                        _miniChartCpuId[p] = new MiniScatterChart();
+                    }
+                    break;
                 case ChartType.Bar:
                     _miniChart = new MiniBarChart { HorizontalLines = 9 };
                     _miniChartCpuId = new MiniBarChart[_processors];
@@ -216,8 +225,11 @@ namespace HumbleCpuMonitor
             _miUseBarChart.Click += (o, e) => UseBarChart();
             _miUseLineChart = new MenuItem("Line chart");
             _miUseLineChart.Click += (o, e) => UseLineChart();
+            _miUseScatterChart = new MenuItem("Scatter chart");
+            _miUseScatterChart.Click += (o, e) => UseScatterChart();
             cType.MenuItems.Add(_miUseBarChart);
             cType.MenuItems.Add(_miUseLineChart);
+            cType.MenuItems.Add(_miUseScatterChart);
 
             _miToggleSingleCpuMenu = new MenuItem();
             _miToggleSingleCpuMenu.Click += (o, e) =>
@@ -278,9 +290,19 @@ namespace HumbleCpuMonitor
             _trayIcon.ContextMenu = _menu;
         }
 
+        private void UseScatterChart()
+        {
+            _miUseBarChart.Checked = false;
+            _miUseLineChart.Checked = false;
+            _miUseScatterChart.Checked = true;
+            _chartMode = ChartType.Scatter;
+            RebuildCharts();
+        }
+
         private void UseLineChart()
         {
             _miUseBarChart.Checked = false;
+            _miUseScatterChart.Checked = false;
             _miUseLineChart.Checked = true;
             _chartMode = ChartType.Line;
             RebuildCharts();
@@ -289,6 +311,7 @@ namespace HumbleCpuMonitor
         private void UseBarChart()
         {
             _miUseBarChart.Checked = true;
+            _miUseScatterChart.Checked = false;
             _miUseLineChart.Checked = false;
             _chartMode = ChartType.Bar;
             RebuildCharts();

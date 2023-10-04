@@ -7,6 +7,7 @@
     {
         Unknown,
         Bar,
-        Line
+        Line,
+        Scatter
     }
 }

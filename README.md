@@ -13,3 +13,7 @@ A single process CPU usage
 And can show some System Information
 
 ![image](https://user-images.githubusercontent.com/7286466/183282539-74584732-c6c2-4c0f-ac5e-e04264135955.png)
+
+Main chart can now be chosen among Bar, Line and Scatter modes:
+
+![HCM_scatter_and_line_charts](https://github.com/SiMoStro/HumbleCpuMonitor/assets/7286466/d1f73f76-37a9-423c-9025-368a6a2c65a5)

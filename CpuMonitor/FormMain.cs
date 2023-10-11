@@ -62,6 +62,10 @@ namespace HumbleCpuMonitor
 
         MachineInfo _machineInfo;
 
+        private MouseMessageFilter _mouseHandler;
+        int? _borderSize = null;
+        int? _captionSize = null;
+
         #endregion
 
         public float CpuUsage
@@ -110,7 +114,7 @@ namespace HumbleCpuMonitor
             UpdateTrayIcon();
 
             _totalCpuMode = true;
-            UseBarChart();
+            SwitchChartMode(ChartType.Bar);
 
             _timer = new Timer { Interval = 1000 };
             _timer.Tick += HandleTick;
@@ -222,11 +226,11 @@ namespace HumbleCpuMonitor
 
             MenuItem cType = new MenuItem("Chart type");
             _miUseBarChart = new MenuItem("Bar chart");
-            _miUseBarChart.Click += (o, e) => UseBarChart();
+            _miUseBarChart.Click += (o, e) => SwitchChartMode(ChartType.Bar);
             _miUseLineChart = new MenuItem("Line chart");
-            _miUseLineChart.Click += (o, e) => UseLineChart();
+            _miUseLineChart.Click += (o, e) => SwitchChartMode(ChartType.Line);
             _miUseScatterChart = new MenuItem("Scatter chart");
-            _miUseScatterChart.Click += (o, e) => UseScatterChart();
+            _miUseScatterChart.Click += (o, e) => SwitchChartMode(ChartType.Scatter);
             cType.MenuItems.Add(_miUseBarChart);
             cType.MenuItems.Add(_miUseLineChart);
             cType.MenuItems.Add(_miUseScatterChart);
@@ -290,30 +294,24 @@ namespace HumbleCpuMonitor
             _trayIcon.ContextMenu = _menu;
         }
 
-        private void UseScatterChart()
+        private void SwitchChartMode(ChartType chartMode)
         {
-            _miUseBarChart.Checked = false;
-            _miUseLineChart.Checked = false;
-            _miUseScatterChart.Checked = true;
-            _chartMode = ChartType.Scatter;
-            RebuildCharts();
-        }
-
-        private void UseLineChart()
-        {
-            _miUseBarChart.Checked = false;
-            _miUseScatterChart.Checked = false;
-            _miUseLineChart.Checked = true;
-            _chartMode = ChartType.Line;
-            RebuildCharts();
-        }
-
-        private void UseBarChart()
-        {
-            _miUseBarChart.Checked = true;
-            _miUseScatterChart.Checked = false;
-            _miUseLineChart.Checked = false;
-            _chartMode = ChartType.Bar;
+            _miUseBarChart.Checked = _miUseScatterChart.Checked = _miUseLineChart.Checked = false;
+            _chartMode = chartMode;
+            switch (chartMode)
+            {
+                case ChartType.Unknown:
+                    return;
+                case ChartType.Bar:
+                    _miUseBarChart.Checked = true;
+                    break;
+                case ChartType.Line:
+                    _miUseLineChart.Checked = true;
+                    break;
+                case ChartType.Scatter:
+                    _miUseScatterChart.Checked = true;
+                    break;
+            }
             RebuildCharts();
         }
 
@@ -439,10 +437,6 @@ namespace HumbleCpuMonitor
         {
             foreach (MiniBarChart chart in _miniChartCpuId) chart.Restart();
         }
-
-        private MouseMessageFilter _mouseHandler;
-        int? _borderSize = null;
-        int? _captionSize = null;
 
         private void HandleMiniChartDoubleClick(object sender, EventArgs e)
         {

@@ -12,8 +12,6 @@ namespace HumbleCpuMonitor.Process
 
         private PROCESS_MEMORY_COUNTERS_EX _memoryPrev;
         private PROCESS_MEMORY_COUNTERS_EX _memoryLast;
-        private DateTime _creationTime;
-        private DateTime _exitTime;
 
         private TimeSpan _prevKernelTime;
         private TimeSpan _prevUserTime;
@@ -54,6 +52,10 @@ namespace HumbleCpuMonitor.Process
             }
         }
 
+        public DateTime ExitTime { get; private set; }
+
+        public DateTime CreationTime { get; private set; }
+
         public void Snapshot(IntPtr handle)
         {
             _prevKernelTime = _lastKernelTime;
@@ -70,8 +72,8 @@ namespace HumbleCpuMonitor.Process
             GetProcessTimes(handle, out creationTime, out exitTime, out kernelTime, out userTime);
             _lastKernelTime = FiletimeToTimeSpan(kernelTime);
             _lastUserTime = FiletimeToTimeSpan(userTime);
-            _creationTime = FiletimeToDateTime(creationTime);
-            _exitTime = FiletimeToDateTime(exitTime);
+            CreationTime = FiletimeToDateTime(creationTime);
+            ExitTime = FiletimeToDateTime(exitTime);
         }
     }
 }

@@ -21,6 +21,21 @@ namespace HumbleCpuMonitor
             base.Dispose(disposing);
         }
 
+        private System.Windows.Forms.TableLayoutPanel w_tblMain;
+        private System.Windows.Forms.Label w_lblPhy;
+        private CustomProgressBar w_prgPhy;
+        private System.Windows.Forms.Label w_lblCC;
+        private CustomProgressBar w_prgPageFile;
+        private System.Windows.Forms.Label w_lblCpu;
+        private CustomProgressBar w_prgCpu;
+        private System.Windows.Forms.Label w_lblProc1;
+        private System.Windows.Forms.Label w_lblProc2;
+        private System.Windows.Forms.Label w_lblProc3;
+        private CustomProgressBar w_prgProc1;
+        private CustomProgressBar w_prgProc2;
+        private CustomProgressBar w_prgProc3;
+        private System.Windows.Forms.TableLayoutPanel w_tblProcs;
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -59,23 +74,23 @@ namespace HumbleCpuMonitor
             this.w_tblMain.Controls.Add(this.w_lblCpu, 0, 2);
             this.w_tblMain.Controls.Add(this.w_prgCpu, 1, 2);
             this.w_tblMain.Location = new System.Drawing.Point(0, 0);
+            this.w_tblMain.Margin = new System.Windows.Forms.Padding(2);
             this.w_tblMain.Name = "w_tblMain";
             this.w_tblMain.RowCount = 3;
-            this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.w_tblMain.Size = new System.Drawing.Size(275, 72);
+            this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.w_tblMain.Size = new System.Drawing.Size(275, 66);
             this.w_tblMain.TabIndex = 0;
             // 
             // w_lblPhy
             // 
             this.w_lblPhy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.w_lblPhy.AutoSize = true;
             this.w_lblPhy.ForeColor = System.Drawing.Color.White;
             this.w_lblPhy.Location = new System.Drawing.Point(3, 0);
             this.w_lblPhy.Name = "w_lblPhy";
-            this.w_lblPhy.Size = new System.Drawing.Size(29, 24);
+            this.w_lblPhy.Size = new System.Drawing.Size(29, 22);
             this.w_lblPhy.TabIndex = 0;
             this.w_lblPhy.Text = "PHY";
             this.w_lblPhy.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -88,7 +103,7 @@ namespace HumbleCpuMonitor
             this.w_prgPhy.Maximum = 0;
             this.w_prgPhy.Minimum = 0;
             this.w_prgPhy.Name = "w_prgPhy";
-            this.w_prgPhy.Size = new System.Drawing.Size(219, 18);
+            this.w_prgPhy.Size = new System.Drawing.Size(219, 16);
             this.w_prgPhy.TabIndex = 1;
             this.w_prgPhy.TabStop = false;
             this.w_prgPhy.Text = "<phy_mem>%";
@@ -99,11 +114,10 @@ namespace HumbleCpuMonitor
             // 
             this.w_lblCC.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.w_lblCC.AutoSize = true;
             this.w_lblCC.ForeColor = System.Drawing.Color.White;
-            this.w_lblCC.Location = new System.Drawing.Point(3, 24);
+            this.w_lblCC.Location = new System.Drawing.Point(3, 22);
             this.w_lblCC.Name = "w_lblCC";
-            this.w_lblCC.Size = new System.Drawing.Size(21, 24);
+            this.w_lblCC.Size = new System.Drawing.Size(21, 22);
             this.w_lblCC.TabIndex = 0;
             this.w_lblCC.Text = "CC";
             this.w_lblCC.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -112,11 +126,11 @@ namespace HumbleCpuMonitor
             // 
             this.w_prgPageFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.w_prgPageFile.ForeColor = System.Drawing.Color.White;
-            this.w_prgPageFile.Location = new System.Drawing.Point(53, 27);
+            this.w_prgPageFile.Location = new System.Drawing.Point(53, 25);
             this.w_prgPageFile.Maximum = 0;
             this.w_prgPageFile.Minimum = 0;
             this.w_prgPageFile.Name = "w_prgPageFile";
-            this.w_prgPageFile.Size = new System.Drawing.Size(219, 18);
+            this.w_prgPageFile.Size = new System.Drawing.Size(219, 16);
             this.w_prgPageFile.TabIndex = 2;
             this.w_prgPageFile.TabStop = false;
             this.w_prgPageFile.Text = "<commit_charge>%";
@@ -127,11 +141,10 @@ namespace HumbleCpuMonitor
             // 
             this.w_lblCpu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.w_lblCpu.AutoSize = true;
             this.w_lblCpu.ForeColor = System.Drawing.Color.White;
-            this.w_lblCpu.Location = new System.Drawing.Point(3, 48);
+            this.w_lblCpu.Location = new System.Drawing.Point(3, 44);
             this.w_lblCpu.Name = "w_lblCpu";
-            this.w_lblCpu.Size = new System.Drawing.Size(29, 24);
+            this.w_lblCpu.Size = new System.Drawing.Size(29, 22);
             this.w_lblCpu.TabIndex = 0;
             this.w_lblCpu.Text = "CPU";
             this.w_lblCpu.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -140,11 +153,11 @@ namespace HumbleCpuMonitor
             // 
             this.w_prgCpu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.w_prgCpu.ForeColor = System.Drawing.Color.White;
-            this.w_prgCpu.Location = new System.Drawing.Point(53, 51);
+            this.w_prgCpu.Location = new System.Drawing.Point(53, 47);
             this.w_prgCpu.Maximum = 0;
             this.w_prgCpu.Minimum = 0;
             this.w_prgCpu.Name = "w_prgCpu";
-            this.w_prgCpu.Size = new System.Drawing.Size(219, 18);
+            this.w_prgCpu.Size = new System.Drawing.Size(219, 16);
             this.w_prgCpu.TabIndex = 3;
             this.w_prgCpu.TabStop = false;
             this.w_prgCpu.Text = "<cpu>%";
@@ -154,9 +167,8 @@ namespace HumbleCpuMonitor
             // w_lblProc1
             // 
             this.w_lblProc1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.w_lblProc1.AutoSize = true;
             this.w_lblProc1.ForeColor = System.Drawing.Color.White;
-            this.w_lblProc1.Location = new System.Drawing.Point(3, 5);
+            this.w_lblProc1.Location = new System.Drawing.Point(3, 4);
             this.w_lblProc1.Name = "w_lblProc1";
             this.w_lblProc1.Size = new System.Drawing.Size(35, 13);
             this.w_lblProc1.TabIndex = 4;
@@ -166,9 +178,8 @@ namespace HumbleCpuMonitor
             // w_lblProc2
             // 
             this.w_lblProc2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.w_lblProc2.AutoSize = true;
             this.w_lblProc2.ForeColor = System.Drawing.Color.White;
-            this.w_lblProc2.Location = new System.Drawing.Point(3, 29);
+            this.w_lblProc2.Location = new System.Drawing.Point(3, 26);
             this.w_lblProc2.Name = "w_lblProc2";
             this.w_lblProc2.Size = new System.Drawing.Size(35, 13);
             this.w_lblProc2.TabIndex = 4;
@@ -178,9 +189,8 @@ namespace HumbleCpuMonitor
             // w_lblProc3
             // 
             this.w_lblProc3.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.w_lblProc3.AutoSize = true;
             this.w_lblProc3.ForeColor = System.Drawing.Color.White;
-            this.w_lblProc3.Location = new System.Drawing.Point(3, 55);
+            this.w_lblProc3.Location = new System.Drawing.Point(3, 48);
             this.w_lblProc3.Name = "w_lblProc3";
             this.w_lblProc3.Size = new System.Drawing.Size(35, 13);
             this.w_lblProc3.TabIndex = 4;
@@ -198,24 +208,24 @@ namespace HumbleCpuMonitor
             this.w_tblProcs.Controls.Add(this.w_prgProc2, 1, 1);
             this.w_tblProcs.Controls.Add(this.w_prgProc3, 1, 2);
             this.w_tblProcs.Controls.Add(this.w_prgProc1, 1, 0);
-            this.w_tblProcs.Location = new System.Drawing.Point(0, 75);
+            this.w_tblProcs.Location = new System.Drawing.Point(0, 66);
             this.w_tblProcs.Name = "w_tblProcs";
             this.w_tblProcs.RowCount = 3;
-            this.w_tblProcs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.w_tblProcs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.w_tblProcs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.w_tblProcs.Size = new System.Drawing.Size(275, 75);
+            this.w_tblProcs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.w_tblProcs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.w_tblProcs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.w_tblProcs.Size = new System.Drawing.Size(275, 66);
             this.w_tblProcs.TabIndex = 1;
             // 
             // w_prgProc2
             // 
             this.w_prgProc2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.w_prgProc2.ForeColor = System.Drawing.Color.White;
-            this.w_prgProc2.Location = new System.Drawing.Point(53, 27);
+            this.w_prgProc2.Location = new System.Drawing.Point(53, 25);
             this.w_prgProc2.Maximum = 0;
             this.w_prgProc2.Minimum = 0;
             this.w_prgProc2.Name = "w_prgProc2";
-            this.w_prgProc2.Size = new System.Drawing.Size(219, 18);
+            this.w_prgProc2.Size = new System.Drawing.Size(219, 16);
             this.w_prgProc2.TabIndex = 6;
             this.w_prgProc2.TabStop = false;
             this.w_prgProc2.Text = "<proc2_cpu%>";
@@ -226,11 +236,11 @@ namespace HumbleCpuMonitor
             // 
             this.w_prgProc3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.w_prgProc3.ForeColor = System.Drawing.Color.White;
-            this.w_prgProc3.Location = new System.Drawing.Point(53, 51);
+            this.w_prgProc3.Location = new System.Drawing.Point(53, 47);
             this.w_prgProc3.Maximum = 0;
             this.w_prgProc3.Minimum = 0;
             this.w_prgProc3.Name = "w_prgProc3";
-            this.w_prgProc3.Size = new System.Drawing.Size(219, 21);
+            this.w_prgProc3.Size = new System.Drawing.Size(219, 16);
             this.w_prgProc3.TabIndex = 7;
             this.w_prgProc3.TabStop = false;
             this.w_prgProc3.Text = "<proc3_cpu%>";
@@ -245,7 +255,7 @@ namespace HumbleCpuMonitor
             this.w_prgProc1.Maximum = 0;
             this.w_prgProc1.Minimum = 0;
             this.w_prgProc1.Name = "w_prgProc1";
-            this.w_prgProc1.Size = new System.Drawing.Size(219, 18);
+            this.w_prgProc1.Size = new System.Drawing.Size(219, 16);
             this.w_prgProc1.TabIndex = 5;
             this.w_prgProc1.TabStop = false;
             this.w_prgProc1.Text = "<proc1_cpu%>";
@@ -257,7 +267,7 @@ namespace HumbleCpuMonitor
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(276, 151);
+            this.ClientSize = new System.Drawing.Size(277, 134);
             this.ControlBox = false;
             this.Controls.Add(this.w_tblProcs);
             this.Controls.Add(this.w_tblMain);
@@ -271,28 +281,11 @@ namespace HumbleCpuMonitor
             this.Text = "MachineInfo";
             this.TopMost = true;
             this.w_tblMain.ResumeLayout(false);
-            this.w_tblMain.PerformLayout();
             this.w_tblProcs.ResumeLayout(false);
-            this.w_tblProcs.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TableLayoutPanel w_tblMain;
-        private System.Windows.Forms.Label w_lblPhy;
-        private CustomProgressBar w_prgPhy;
-        private System.Windows.Forms.Label w_lblCC;
-        private CustomProgressBar w_prgPageFile;
-        private System.Windows.Forms.Label w_lblCpu;
-        private CustomProgressBar w_prgCpu;
-        private System.Windows.Forms.Label w_lblProc1;
-        private System.Windows.Forms.Label w_lblProc2;
-        private System.Windows.Forms.Label w_lblProc3;
-        private CustomProgressBar w_prgProc1;
-        private CustomProgressBar w_prgProc2;
-        private CustomProgressBar w_prgProc3;
-        private System.Windows.Forms.TableLayoutPanel w_tblProcs;
     }
 }

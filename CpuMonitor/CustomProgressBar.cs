@@ -1,10 +1,9 @@
-﻿using System.Diagnostics;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace HumbleCpuMonitor
 {
-    public partial class CustomProgressBar : Control
+    public class CustomProgressBar : Control
     {
         private int _min, _max, _value;
         private Brush _background, _foreground;

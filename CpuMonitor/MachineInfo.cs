@@ -20,6 +20,8 @@ namespace HumbleCpuMonitor
         {
             InitializeComponent();
 
+            if (DesignMode) return;
+
             Snapshot();
 
             _mouseHandler = new MouseMessageFilter(Handle);

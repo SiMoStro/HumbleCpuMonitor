@@ -17,7 +17,7 @@ namespace HumbleCpuMonitor.Charts
         #region [protected]
 
         protected List<float> _points = new List<float>();
-        protected const int ItemHorPaintSize = 4;
+        protected int ItemHorPaintSize = 4;
 
         #endregion
 

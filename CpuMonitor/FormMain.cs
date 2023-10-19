@@ -39,6 +39,7 @@ namespace HumbleCpuMonitor
         private MenuItem _miUseBarChart;
         private MenuItem _miUseLineChart;
         private MenuItem _miUseScatterChart;
+        private MenuItem _miUseFullColorChart;
 
         private ProcessSelector _processSelector;
 
@@ -152,6 +153,14 @@ namespace HumbleCpuMonitor
                         _miniChartCpuId[p] = new MiniLineChart();
                     }
                     break;
+                case ChartType.FullColor:
+                    _miniChart = new MiniFullColor { HorizontalLines = 0 };
+                    _miniChartCpuId = new MiniFullColor[_processors];
+                    for (int p = 0; p < _processors; p++)
+                    {
+                        _miniChartCpuId[p] = new MiniFullColor();
+                    }
+                    break;
             }
             if(oldChart != null)
             {
@@ -231,9 +240,12 @@ namespace HumbleCpuMonitor
             _miUseLineChart.Click += (o, e) => SwitchChartMode(ChartType.Line);
             _miUseScatterChart = new MenuItem("Scatter chart");
             _miUseScatterChart.Click += (o, e) => SwitchChartMode(ChartType.Scatter);
+            _miUseFullColorChart = new MenuItem("FullColor chart");
+            _miUseFullColorChart.Click += (o, e) => SwitchChartMode(ChartType.FullColor);
             cType.MenuItems.Add(_miUseBarChart);
             cType.MenuItems.Add(_miUseLineChart);
             cType.MenuItems.Add(_miUseScatterChart);
+            cType.MenuItems.Add(_miUseFullColorChart);
 
             _miToggleSingleCpuMenu = new MenuItem();
             _miToggleSingleCpuMenu.Click += (o, e) =>
@@ -296,7 +308,7 @@ namespace HumbleCpuMonitor
 
         private void SwitchChartMode(ChartType chartMode)
         {
-            _miUseBarChart.Checked = _miUseScatterChart.Checked = _miUseLineChart.Checked = false;
+            _miUseBarChart.Checked = _miUseScatterChart.Checked = _miUseLineChart.Checked = _miUseFullColorChart.Checked= false;
             _chartMode = chartMode;
             switch (chartMode)
             {
@@ -310,6 +322,9 @@ namespace HumbleCpuMonitor
                     break;
                 case ChartType.Scatter:
                     _miUseScatterChart.Checked = true;
+                    break;
+                case ChartType.FullColor:
+                    _miUseFullColorChart.Checked = true;
                     break;
             }
             RebuildCharts();
@@ -447,21 +462,26 @@ namespace HumbleCpuMonitor
                 {   // switch to no border
                     _borderSize = Math.Max(0, ((Size.Width - ClientSize.Width) / 2));
                     _captionSize = Size.Height - ClientSize.Height - _borderSize.Value;
+                    int desiredHeigth = Math.Max(10, Height - _borderSize.Value - _captionSize.Value);
                     int x = Location.X + _borderSize.Value;
                     int y = Location.Y + _captionSize.Value;
                     FormBorderStyle = FormBorderStyle.None;
+                    MinimumSize = new Size(MinimumSize.Width, 10);
                     Location = new Point(x, y);
+                    Size = new Size(Width, desiredHeigth);
                 }
                 else
                 {   // switch to border
-                    if(_borderSize.HasValue && _captionSize.HasValue)
+                    if (_borderSize.HasValue && _captionSize.HasValue)
                     {
                         int x = Location.X - _borderSize.Value;
                         int y = Location.Y - _captionSize.Value;
+                        MinimumSize = new Size(400, _captionSize.Value + _borderSize.Value);
                         _borderSize = _captionSize = null;
                         Location = new Point(x, y);
                     }
                     FormBorderStyle = FormBorderStyle.Sizable;
+                    
                 }
                 _mouseHandler = new MouseMessageFilter(Handle);
                 Application.AddMessageFilter(_mouseHandler);

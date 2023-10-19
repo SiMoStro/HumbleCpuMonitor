@@ -8,6 +8,7 @@
         Unknown,
         Bar,
         Line,
-        Scatter
+        Scatter,
+        FullColor
     }
 }

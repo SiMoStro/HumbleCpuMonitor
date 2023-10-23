@@ -167,6 +167,8 @@ namespace HumbleCpuMonitor.Config
             if (val < 0) val = 0;
             if (val > 100) val = 100;
             int idx = (int)(val / NUM);
+
+            if (idx >= NUM) return (NUM - 1);
             return idx;
         }
 

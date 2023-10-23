@@ -86,6 +86,14 @@
     <Compile Include="Charts\MiniScatterChart.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Config\ConfigData.cs" />
+    <Compile Include="Config\ConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Config\ConfigurationForm.Designer.cs">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Config\ScenarioManager.cs" />
     <Compile Include="CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -124,6 +132,9 @@
     <Compile Include="Win32\Psapi.cs" />
     <Compile Include="SuperPower.cs" />
     <Compile Include="Win32\User32.cs" />
+    <EmbeddedResource Include="Config\ConfigurationForm.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
       <SubType>Designer</SubType>

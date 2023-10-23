@@ -115,33 +115,5 @@ namespace HumbleCpuMonitor.Charts
             UpdatePaintItemsCount();
             Invalidate();
         }
-
-        protected Brush GetBrush(float value)
-        {
-            if (value > 90) return Brushes.Red;
-            if (value > 80) return Brushes.OrangeRed;
-            if (value > 70) return Brushes.Orange;
-            if (value > 60) return Brushes.Gold;
-            if (value > 50) return Brushes.Yellow;
-            if (value > 40) return Brushes.YellowGreen;
-            if (value > 30) return Brushes.SpringGreen;
-            if (value > 20) return Brushes.MediumSpringGreen;
-            if (value > 10) return Brushes.Aquamarine;
-            return Brushes.Cyan;
-        }
-
-        protected Pen GetPen(float value)
-        {
-            if (value > 90) return Pens.Red;
-            if (value > 80) return Pens.OrangeRed;
-            if (value > 70) return Pens.Orange;
-            if (value > 60) return Pens.Gold;
-            if (value > 50) return Pens.Yellow;
-            if (value > 40) return Pens.YellowGreen;
-            if (value > 30) return Pens.SpringGreen;
-            if (value > 20) return Pens.MediumSpringGreen;
-            if (value > 10) return Pens.Aquamarine;
-            return Pens.Cyan;
-        }
     }
 }

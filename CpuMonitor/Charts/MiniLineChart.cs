@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using HumbleCpuMonitor.Config;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace HumbleCpuMonitor.Charts
@@ -21,7 +22,7 @@ namespace HumbleCpuMonitor.Charts
                 if (x >= _points.Count) break;
                 float y = (Height * _points[x]) / 100.0f;
                 PointF pt = new PointF(x * ItemHorPaintSize, Height - y);
-                e.Graphics.DrawLine(GetPen(_points[x]), lastPoint, pt);
+                e.Graphics.DrawLine(ScenarioManager.Instance.Configuration.GetPen(_points[x]), lastPoint, pt);
                 lastPoint = pt;
             }
         }

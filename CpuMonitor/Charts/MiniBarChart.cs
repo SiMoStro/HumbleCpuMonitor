@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using HumbleCpuMonitor.Config;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace HumbleCpuMonitor.Charts
@@ -20,7 +21,7 @@ namespace HumbleCpuMonitor.Charts
             {
                 if (x >= _points.Count) break;
                 float y = (Height * _points[x]) / 100.0f;
-                e.Graphics.FillRectangle(GetBrush(_points[x]), x * ItemHorPaintSize, Height - y, ItemHorPaintSize - 1, y);
+                e.Graphics.FillRectangle(ScenarioManager.Instance.Configuration.GetBrush(_points[x]), x * ItemHorPaintSize, Height - y, ItemHorPaintSize - 1, y);
             }
         }
     }

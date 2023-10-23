@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using HumbleCpuMonitor.Charts;
 using HumbleCpuMonitor.Process;
+using HumbleCpuMonitor.Config;
 
 namespace HumbleCpuMonitor
 {
@@ -35,6 +36,7 @@ namespace HumbleCpuMonitor
         private MenuItem _miUpdTwoSeconds;
         private MenuItem _miUpdThreeSeconds;
         private MenuItem _miMachineInfo;
+        private MenuItem _configMenu;
 
         private MenuItem _miUseBarChart;
         private MenuItem _miUseLineChart;
@@ -85,6 +87,8 @@ namespace HumbleCpuMonitor
         public FormMain()
         {
             InitializeComponent();
+
+            ScenarioManager.Instance.Initialize();
 
             Main = this;
 
@@ -215,6 +219,7 @@ namespace HumbleCpuMonitor
             _miExitMenu.Click += (o, e) =>
             {
                 _internalExit = true;
+                ScenarioManager.Instance.Save();
                 Application.Exit();
             };
 
@@ -282,6 +287,9 @@ namespace HumbleCpuMonitor
                 _processSelector.FormClosed += HandleProcessSelectorClosed;
             };
 
+            _configMenu = new MenuItem("Configuration");
+            _configMenu.Click += (o, e) => ConfigurationForm.ShowConfig();
+
             upd.MenuItems.Add(_miUpdInsane);
             upd.MenuItems.Add(_miUpdHalfSecond);
             upd.MenuItems.Add(_miUpdOneSecond);
@@ -294,6 +302,7 @@ namespace HumbleCpuMonitor
             _menu.MenuItems.Add(_miToggleSingleCpuMenu);
             _menu.MenuItems.Add(_selectProcess);
             _menu.MenuItems.Add(_miMachineInfo);
+            _menu.MenuItems.Add(_configMenu);
             _menu.MenuItems.Add(new MenuItem("-"));
             _menu.MenuItems.Add(_miExitMenu);
 

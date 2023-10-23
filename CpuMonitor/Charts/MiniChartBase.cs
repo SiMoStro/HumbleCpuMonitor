@@ -67,7 +67,14 @@ namespace HumbleCpuMonitor.Charts
             float h1 = (float)Height / (HorizontalLines + 1);
             for (int l = 1; l < HorizontalLines + 1; l++) e.Graphics.DrawLine(_horLinePen, 0, h1 * l, Width, h1 * l);
 
-            ChartPaint(e);
+            try
+            {
+                ChartPaint(e);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
 
             // print last percentage
             if (_points.Count != 0)

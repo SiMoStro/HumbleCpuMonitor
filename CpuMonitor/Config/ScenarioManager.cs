@@ -72,7 +72,7 @@ namespace HumbleCpuMonitor.Config
         internal void SetNewColors(List<Color> colors)
         {
             if (colors.Count != 10) return;
-            Configuration.SetColors(colors);
+            Configuration.SetValueColors(colors);
         }
 
         private string GetFullPath()

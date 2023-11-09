@@ -22,7 +22,7 @@ namespace HumbleCpuMonitor.Charts
                 if (x >= _points.Count) break;
                 float y = (Height * _points[x]) / 100.0f;
                 PointF pt = new PointF(x * ItemHorPaintSize, Height - y);
-                e.Graphics.DrawLine(ScenarioManager.Instance.Configuration.GetPen(_points[x]), lastPoint, pt);
+                e.Graphics.DrawLine(ScenarioManager.Instance.Configuration.GetPenForValue(_points[x]), lastPoint, pt);
                 lastPoint = pt;
             }
         }

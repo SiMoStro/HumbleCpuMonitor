@@ -6,26 +6,40 @@ using System.Xml.Serialization;
 
 namespace HumbleCpuMonitor.Config
 {
+    /// <summary>
+    /// The configuration of the application
+    /// </summary>
     public class ConfigData
     {
+        #region [private]
+
         private const int NUM = 10;
-        
+
+        #endregion
+
+        #region [internals] Defaults
+
         [XmlIgnore]
-        internal Color[] Defaults = { 
-            Color.Cyan, 
-            Color.Aquamarine, 
-            Color.MediumSpringGreen, 
-            Color.SpringGreen, 
-            Color.YellowGreen, 
-            Color.Yellow, 
-            Color.Gold, 
-            Color.Orange, 
-            Color.OrangeRed, 
-            Color.Red 
+        internal Color[] Defaults = {
+            Color.Cyan,
+            Color.Aquamarine,
+            Color.MediumSpringGreen,
+            Color.SpringGreen,
+            Color.YellowGreen,
+            Color.Yellow,
+            Color.Gold,
+            Color.Orange,
+            Color.OrangeRed,
+            Color.Red
         };
 
+        #endregion
+
+        /// <summary>
+        /// Serialized value colors
+        /// </summary>
         public string[] ValColor
-        { 
+        {
             get
             {
                 string[] retVal = new string[NUM];
@@ -41,8 +55,67 @@ namespace HumbleCpuMonitor.Config
             }
         }
 
+        /// <summary>
+        /// Serialized Background
+        /// </summary>
+        public string ValBackground
+        {
+            get
+            {
+                return Background.ToHtmlColor();
+            }
+
+            set
+            {
+                Background = value.FromHtmlColor();
+            }
+        }
+
+        /// <summary>
+        /// Serialized foreground
+        /// </summary>
+        public string ValForeground
+        {
+            get
+            {
+                return Foreground.ToHtmlColor();
+            }
+
+            set
+            {
+                Foreground = value.FromHtmlColor();
+            }
+        }
+
+        /// <summary>
+        /// Serialized chart lines
+        /// </summary>
+        public string ValChartLines
+        {
+            get
+            {
+                return ChartLines.ToHtmlColor();
+            }
+
+            set
+            {
+                ChartLines = value.FromHtmlColor();
+            }
+        }
+
+        #region [XML ignore] Ready-to-use properties derived from serialized values
+
         [XmlIgnore]
-        public Color[] Colors { get; set; }
+        internal Color Background { get; set; }
+
+        [XmlIgnore]
+        internal Color Foreground { get; set; }
+
+        [XmlIgnore]
+        internal Color ChartLines { get; set; }
+
+        [XmlIgnore]
+        internal Color[] Colors { get; set; }
 
         [XmlIgnore]
         internal Pen[] Pens { get; set; }
@@ -50,35 +123,23 @@ namespace HumbleCpuMonitor.Config
         [XmlIgnore]
         internal SolidBrush[] Brushes { get; set; }
 
+        #endregion
+
         public ConfigData()
         {
             SetDefault();
+            Background = Color.Black;
+            Foreground = Color.White;
+            ChartLines = Color.DarkGray;
         }
 
-        #region Getters
+        #region Internal useful getters and setters
 
         /// <summary>
-        /// Color associated to %
+        /// Sets the colors to use for valued points
         /// </summary>
-        /// <param name="val">Value in [0, 100]</param>
-        /// <returns>Color</returns>
-        internal Color GetColor(double val)
-        {
-            return Colors[Idx(val)];
-        }
-
-        /// <summary>
-        /// Pen associated to %
-        /// </summary>
-        /// <param name="val">Value in [0, 100]</param>
-        /// <returns>Pen</returns>
-
-        internal Pen GetPen(double val)
-        {
-            return Pens[Idx(val)];
-        }
-
-        internal void SetColors(List<Color> colors)
+        /// <param name="colors">List of colors</param>
+        internal void SetValueColors(List<Color> colors)
         {
             try
             {
@@ -93,18 +154,41 @@ namespace HumbleCpuMonitor.Config
         }
 
         /// <summary>
+        /// Color associated to %
+        /// </summary>
+        /// <param name="val">Value in [0, 100]</param>
+        /// <returns>Color</returns>
+        internal Color GetColorForValue(double val)
+        {
+            return Colors[Idx(val)];
+        }
+
+        /// <summary>
+        /// Pen associated to %
+        /// </summary>
+        /// <param name="val">Value in [0, 100]</param>
+        /// <returns>Pen</returns>
+
+        internal Pen GetPenForValue(double val)
+        {
+            return Pens[Idx(val)];
+        }
+
+        /// <summary>
         /// Brush associated to %
         /// </summary>
         /// <param name="val">Value in [0, 100]</param>
         /// <returns>Brush</returns>
-        internal Brush GetBrush(double val)
+        internal Brush GetBrushForValue(double val)
         {
             return Brushes[Idx(val)];
         }
 
         #endregion
 
-        public void LoadData(string filename)
+        #region Load and Save
+
+        internal void LoadData(string filename)
         {
             try
             {
@@ -124,7 +208,7 @@ namespace HumbleCpuMonitor.Config
             }
         }
 
-        public void SaveData(string filename)
+        internal void SaveData(string filename)
         {
             string saveData = null;
             XmlSerializer xmlSerializer = new XmlSerializer(GetType());
@@ -142,7 +226,9 @@ namespace HumbleCpuMonitor.Config
             File.WriteAllText(filename, saveData);
         }
 
-        #region internals and private
+        #endregion
+
+        #region Utilities and initialization
 
         internal void SetDefault()
         {

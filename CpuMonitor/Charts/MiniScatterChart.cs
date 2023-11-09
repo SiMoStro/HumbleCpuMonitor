@@ -24,8 +24,8 @@ namespace HumbleCpuMonitor.Charts
                 float y = (Height * _points[x]) / 100.0f;
                 PointF pt = new PointF(x * ItemHorPaintSize, Height - y);
                 var r = new RectangleF(new PointF(pt.X - _halfDotSize, pt.Y - _halfDotSize), new SizeF(_halfDotSize * 2, _halfDotSize * 2));
-                e.Graphics.DrawEllipse(ScenarioManager.Instance.Configuration.GetPen(_points[x]), r);
-                e.Graphics.FillEllipse(ScenarioManager.Instance.Configuration.GetBrush(_points[x]), r);
+                e.Graphics.DrawEllipse(ScenarioManager.Instance.Configuration.GetPenForValue(_points[x]), r);
+                e.Graphics.FillEllipse(ScenarioManager.Instance.Configuration.GetBrushForValue(_points[x]), r);
             }
         }
     }

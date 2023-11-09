@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HumbleCpuMonitor.Config;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -18,6 +19,7 @@ namespace HumbleCpuMonitor.Charts
 
         protected List<float> _points = new List<float>();
         protected int ItemHorPaintSize = 4;
+        protected Brush ForegroundBrush;
 
         #endregion
 
@@ -49,8 +51,15 @@ namespace HumbleCpuMonitor.Charts
         internal MiniChartBase()
         {
             DoubleBuffered = true;
-            _horLinePen = new Pen(new SolidBrush(Color.FromArgb(128, 64, 64, 64)), 0.25f);
+            UpdateColors();
             Type = ChartType.Unknown;
+        }
+
+        internal virtual void UpdateColors()
+        {
+            ConfigData config = ScenarioManager.Instance.Configuration;
+            _horLinePen = new Pen(new SolidBrush(config.ChartLines), 0.25f);
+            ForegroundBrush = new SolidBrush(config.Foreground);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -61,7 +70,7 @@ namespace HumbleCpuMonitor.Charts
 
         private void FullPaint(PaintEventArgs e)
         {
-            e.Graphics.Clear(Color.Black);
+            e.Graphics.Clear(ScenarioManager.Instance.Configuration.Background);
 
             // horizontal lines
             float h1 = (float)Height / (HorizontalLines + 1);
@@ -79,7 +88,7 @@ namespace HumbleCpuMonitor.Charts
             // print last percentage
             if (_points.Count != 0)
             {
-                e.Graphics.DrawString((_points[_points.Count - 1] / 100).ToString("P"), SystemFonts.DialogFont, Brushes.White, 10, 10);
+                e.Graphics.DrawString((_points[_points.Count - 1] / 100).ToString("P"), SystemFonts.DialogFont, ForegroundBrush, 10, 10);
             }
         }
 

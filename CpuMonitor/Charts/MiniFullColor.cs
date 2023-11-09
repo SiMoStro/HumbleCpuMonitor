@@ -21,7 +21,7 @@ namespace HumbleCpuMonitor.Charts
             {
                 if (x >= _points.Count) break;
                 RectangleF rect = new RectangleF(new PointF(x * ItemHorPaintSize, 0), new SizeF(ItemHorPaintSize, Height));
-                e.Graphics.FillRectangle(ScenarioManager.Instance.Configuration.GetBrush(_points[x]), rect);
+                e.Graphics.FillRectangle(ScenarioManager.Instance.Configuration.GetBrushForValue(_points[x]), rect);
             }
         }
     }

@@ -21,7 +21,7 @@ namespace HumbleCpuMonitor.Charts
             {
                 if (x >= _points.Count) break;
                 float y = (Height * _points[x]) / 100.0f;
-                e.Graphics.FillRectangle(ScenarioManager.Instance.Configuration.GetBrush(_points[x]), x * ItemHorPaintSize, Height - y, ItemHorPaintSize - 1, y);
+                e.Graphics.FillRectangle(ScenarioManager.Instance.Configuration.GetBrushForValue(_points[x]), x * ItemHorPaintSize, Height - y, ItemHorPaintSize - 1, y);
             }
         }
     }

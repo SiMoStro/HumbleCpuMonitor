@@ -288,7 +288,11 @@ namespace HumbleCpuMonitor
             };
 
             _configMenu = new MenuItem("Configuration");
-            _configMenu.Click += (o, e) => ConfigurationForm.ShowConfig();
+            _configMenu.Click += (o, e) =>
+            {
+                ConfigurationForm.ShowConfig();
+                OnConfigurationClosed();
+            };
 
             upd.MenuItems.Add(_miUpdInsane);
             upd.MenuItems.Add(_miUpdHalfSecond);
@@ -313,6 +317,12 @@ namespace HumbleCpuMonitor
                 _selectProcess.Enabled = (_processSelector == null);
             };
             _trayIcon.ContextMenu = _menu;
+        }
+
+        private void OnConfigurationClosed()
+        {
+            _miniChart?.UpdateColors();
+            foreach (var chart in _miniChartCpuId) chart?.UpdateColors();
         }
 
         private void SwitchChartMode(ChartType chartMode)

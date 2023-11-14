@@ -103,6 +103,31 @@ namespace HumbleCpuMonitor.Config
             }
         }
 
+        /// <summary>
+        /// The X coordinate of the Main Chart window
+        /// </summary>
+        public int? MainWinX { get; set; }
+
+        /// <summary>
+        /// The Y coordinate of the Main Chart window
+        /// </summary>
+        public int? MainWinY { get; set; }
+
+        /// <summary>
+        /// The Width of the Main Chart window
+        /// </summary>
+        public int? MainWinWidth { get; set; }
+
+        /// <summary>
+        /// The Height of the Main Chart window
+        /// </summary>
+        public int? MainWinHeight { get; set; }
+
+        /// <summary>
+        /// True if the Main Chart window is caption-less, false otherwise
+        /// </summary>
+        public bool MainWinCaptionLess { get; set; }
+
         #region [XML ignore] Ready-to-use properties derived from serialized values
 
         [XmlIgnore]
@@ -199,8 +224,7 @@ namespace HumbleCpuMonitor.Config
                 XmlSerializer xmlSerializer = new XmlSerializer(GetType());
                 StringReader textWriter = new StringReader(serializedData);
                 ConfigData cd = (ConfigData) xmlSerializer.Deserialize(textWriter);
-                
-                ValColor = cd.ValColor;
+                InitFromInstance(cd);
             }
             catch (Exception e)
             {
@@ -256,6 +280,19 @@ namespace HumbleCpuMonitor.Config
 
             if (idx >= NUM) return (NUM - 1);
             return idx;
+        }
+
+        private void InitFromInstance(ConfigData cd)
+        {
+            ValColor = cd.ValColor;
+            Foreground = cd.Foreground;
+            Background = cd.Background;
+            ChartLines = cd.ChartLines;
+            MainWinX = cd.MainWinX;
+            MainWinY = cd.MainWinY;
+            MainWinHeight = cd.MainWinHeight;
+            MainWinWidth = cd.MainWinWidth;
+            MainWinCaptionLess = cd.MainWinCaptionLess;
         }
 
         #endregion

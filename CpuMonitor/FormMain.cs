@@ -126,6 +126,28 @@ namespace HumbleCpuMonitor
             _timer.Start();
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            ConfigData config = ScenarioManager.Instance.Configuration;
+
+            if (config.MainWinCaptionLess)
+            {
+                SwitchBorderMode(true);
+            }
+
+            if (config.MainWinX.HasValue && config.MainWinY.HasValue)
+            {
+                Location = new Point(config.MainWinX.Value, config.MainWinY.Value);
+            }
+
+            if (config.MainWinWidth.HasValue && config.MainWinHeight.HasValue)
+            {
+                Size = new Size(config.MainWinWidth.Value, config.MainWinHeight.Value);
+            }
+        }
+
         private void RebuildCharts()
         {
             MiniChartBase oldChart = _miniChart;
@@ -166,12 +188,12 @@ namespace HumbleCpuMonitor
                     }
                     break;
             }
-            if(oldChart != null)
+            if (oldChart != null)
             {
                 _miniChart.InitValues(oldChart.Values);
             }
-            
-            if(oldGridChart != null)
+
+            if (oldGridChart != null)
             {
                 for (int p = 0; p < _processors; p++)
                 {
@@ -219,6 +241,7 @@ namespace HumbleCpuMonitor
             _miExitMenu.Click += (o, e) =>
             {
                 _internalExit = true;
+                if (Visible) UpdateConfigData();
                 ScenarioManager.Instance.Save();
                 Application.Exit();
             };
@@ -327,7 +350,7 @@ namespace HumbleCpuMonitor
 
         private void SwitchChartMode(ChartType chartMode)
         {
-            _miUseBarChart.Checked = _miUseScatterChart.Checked = _miUseLineChart.Checked = _miUseFullColorChart.Checked= false;
+            _miUseBarChart.Checked = _miUseScatterChart.Checked = _miUseLineChart.Checked = _miUseFullColorChart.Checked = false;
             _chartMode = chartMode;
             switch (chartMode)
             {
@@ -363,8 +386,15 @@ namespace HumbleCpuMonitor
         private void ToggleWindowVisibility()
         {
             _allowsHowDisplay = true;
-            if (Visible) Hide();
-            else Show();
+            if (Visible)
+            {
+                UpdateConfigData();
+                Hide();
+            }
+            else
+            {
+                Show();
+            }
         }
 
         protected override void SetVisibleCore(bool value)
@@ -375,8 +405,19 @@ namespace HumbleCpuMonitor
         protected override void OnClosing(CancelEventArgs e)
         {
             if (!_internalExit) e.Cancel = true;
+            UpdateConfigData();
             base.OnClosing(e);
             Hide();
+        }
+
+        private void UpdateConfigData()
+        {
+            ConfigData config = ScenarioManager.Instance.Configuration;
+            config.MainWinCaptionLess = FormBorderStyle == FormBorderStyle.None;
+            config.MainWinX = Location.X;
+            config.MainWinY = Location.Y;
+            config.MainWinWidth = Size.Width;
+            config.MainWinHeight = Size.Height;
         }
 
         private void UpdateTrayIcon()
@@ -423,7 +464,7 @@ namespace HumbleCpuMonitor
                 _miniChart.DoubleClick += HandleMiniChartDoubleClick;
                 _miniChartPanel.Controls.Add(_miniChart);
                 _miniChartPanel.Dock = DockStyle.Fill;
-                if(restart) _miniChart.Restart();
+                if (restart) _miniChart.Restart();
                 Controls.Add(_miniChartPanel);
             }
             else
@@ -474,43 +515,61 @@ namespace HumbleCpuMonitor
 
         private void HandleMiniChartDoubleClick(object sender, EventArgs e)
         {
-            if(ModifierKeys.HasFlag(Keys.Control))
+            if (ModifierKeys.HasFlag(Keys.Control))
             {
-                FormBorderStyle currentStyle = FormBorderStyle;
-                if(currentStyle == FormBorderStyle.Sizable)
-                {   // switch to no border
-                    _borderSize = Math.Max(0, ((Size.Width - ClientSize.Width) / 2));
-                    _captionSize = Size.Height - ClientSize.Height - _borderSize.Value;
-                    int desiredHeigth = Math.Max(10, Height - _borderSize.Value - _captionSize.Value);
-                    int x = Location.X + _borderSize.Value;
-                    int y = Location.Y + _captionSize.Value;
-                    FormBorderStyle = FormBorderStyle.None;
-                    MinimumSize = new Size(MinimumSize.Width, 10);
-                    Location = new Point(x, y);
-                    Size = new Size(Width, desiredHeigth);
-                }
-                else
-                {   // switch to border
-                    if (_borderSize.HasValue && _captionSize.HasValue)
-                    {
-                        int x = Location.X - _borderSize.Value;
-                        int y = Location.Y - _captionSize.Value;
-                        MinimumSize = new Size(400, _captionSize.Value + _borderSize.Value);
-                        _borderSize = _captionSize = null;
-                        Location = new Point(x, y);
-                    }
-                    FormBorderStyle = FormBorderStyle.Sizable;
-                    
-                }
-                _mouseHandler = new MouseMessageFilter(Handle);
-                Application.AddMessageFilter(_mouseHandler);
+                SwitchBorderMode();
             }
             else
             {
                 _miniChart.Restart();
+            }
+        }
+
+        private void SwitchBorderMode(bool forceBorderless = false)
+        {
+            bool goBorderless = FormBorderStyle == FormBorderStyle.Sizable;
+
+            if (forceBorderless)
+            {
+                if(_mouseHandler != null)
+                {
+                    Application.RemoveMessageFilter(_mouseHandler);
+                    _mouseHandler = null;
+                }
+
+                goBorderless = true;
+            }
+
+            if (goBorderless)
+            {   // switch to no border
+                _borderSize = Math.Max(0, ((Size.Width - ClientSize.Width) / 2));
+                _captionSize = Size.Height - ClientSize.Height - _borderSize.Value;
+                int desiredHeigth = Math.Max(10, Height - _borderSize.Value - _captionSize.Value);
+                int x = Location.X + _borderSize.Value;
+                int y = Location.Y + _captionSize.Value;
+                FormBorderStyle = FormBorderStyle.None;
+                MinimumSize = new Size(MinimumSize.Width, 10);
+                Location = new Point(x, y);
+                Size = new Size(Width, desiredHeigth);
+
+                _mouseHandler = new MouseMessageFilter(Handle);
+                Application.AddMessageFilter(_mouseHandler);
+            }
+            else
+            {   // switch to border
+                if (_borderSize.HasValue && _captionSize.HasValue)
+                {
+                    int x = Location.X - _borderSize.Value;
+                    int y = Location.Y - _captionSize.Value;
+                    MinimumSize = new Size(400, _captionSize.Value + _borderSize.Value);
+                    _borderSize = _captionSize = null;
+                    Location = new Point(x, y);
+                }
+                FormBorderStyle = FormBorderStyle.Sizable;
+
                 Application.RemoveMessageFilter(_mouseHandler);
                 _mouseHandler = null;
-            }            
+            }
         }
 
         private void TotalCpuSnapshot()
@@ -521,7 +580,7 @@ namespace HumbleCpuMonitor
             string trayText = (_cpuUsage / 100).ToString("P");
 
             var topProcs = _processes.GetTopProcessesByCpu(3);
-            foreach(var proc in topProcs)
+            foreach (var proc in topProcs)
             {
                 trayText += $"{Environment.NewLine}{proc.Name}";
             }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Chart type
     /// </summary>
-    internal enum ChartType
+    public enum ChartType
     {
         Unknown,
         Bar,

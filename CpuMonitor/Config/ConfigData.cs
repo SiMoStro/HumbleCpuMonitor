@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HumbleCpuMonitor.Charts;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -128,6 +129,11 @@ namespace HumbleCpuMonitor.Config
         /// </summary>
         public bool MainWinCaptionLess { get; set; }
 
+        /// <summary>
+        /// Chart type in use
+        /// </summary>
+        public ChartType ChartType { get; set; }
+
         #region [XML ignore] Ready-to-use properties derived from serialized values
 
         [XmlIgnore]
@@ -156,6 +162,7 @@ namespace HumbleCpuMonitor.Config
             Background = Color.Black;
             Foreground = Color.White;
             ChartLines = Color.DarkGray;
+            ChartType = ChartType.Bar;
         }
 
         #region Internal useful getters and setters
@@ -293,6 +300,7 @@ namespace HumbleCpuMonitor.Config
             MainWinHeight = cd.MainWinHeight;
             MainWinWidth = cd.MainWinWidth;
             MainWinCaptionLess = cd.MainWinCaptionLess;
+            ChartType = cd.ChartType;
         }
 
         #endregion

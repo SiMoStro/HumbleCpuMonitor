@@ -63,7 +63,7 @@ namespace HumbleCpuMonitor
         private Processes _processes;
         private System.Diagnostics.Process _self;
 
-        MachineInfo _machineInfo;
+        private MachineInfo _machineInfo;
 
         private MouseMessageFilter _mouseHandler;
         int? _borderSize = null;
@@ -119,7 +119,7 @@ namespace HumbleCpuMonitor
             UpdateTrayIcon();
 
             _totalCpuMode = true;
-            SwitchChartMode(ChartType.Bar);
+            SwitchChartMode(ScenarioManager.Instance.Configuration.ChartType);
 
             _timer = new Timer { Interval = 1000 };
             _timer.Tick += HandleTick;
@@ -129,7 +129,13 @@ namespace HumbleCpuMonitor
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            RestoreConfigData();
+        }
 
+        #region Configuration: save and restore
+
+        private void RestoreConfigData()
+        {
             ConfigData config = ScenarioManager.Instance.Configuration;
 
             if (config.MainWinCaptionLess)
@@ -147,6 +153,19 @@ namespace HumbleCpuMonitor
                 Size = new Size(config.MainWinWidth.Value, config.MainWinHeight.Value);
             }
         }
+
+        private void UpdateConfigData()
+        {
+            ConfigData config = ScenarioManager.Instance.Configuration;
+            config.MainWinCaptionLess = FormBorderStyle == FormBorderStyle.None;
+            config.MainWinX = Location.X;
+            config.MainWinY = Location.Y;
+            config.MainWinWidth = Size.Width;
+            config.MainWinHeight = Size.Height;
+            config.ChartType = _chartMode;
+        }
+
+        #endregion
 
         private void RebuildCharts()
         {
@@ -408,16 +427,6 @@ namespace HumbleCpuMonitor
             UpdateConfigData();
             base.OnClosing(e);
             Hide();
-        }
-
-        private void UpdateConfigData()
-        {
-            ConfigData config = ScenarioManager.Instance.Configuration;
-            config.MainWinCaptionLess = FormBorderStyle == FormBorderStyle.None;
-            config.MainWinX = Location.X;
-            config.MainWinY = Location.Y;
-            config.MainWinWidth = Size.Width;
-            config.MainWinHeight = Size.Height;
         }
 
         private void UpdateTrayIcon()

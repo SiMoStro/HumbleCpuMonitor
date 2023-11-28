@@ -44,6 +44,7 @@ namespace HumbleCpuMonitor
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.w_tblMain = new System.Windows.Forms.TableLayoutPanel();
             this.w_lblPhy = new System.Windows.Forms.Label();
             this.w_prgPhy = new HumbleCpuMonitor.CustomProgressBar();
@@ -58,6 +59,7 @@ namespace HumbleCpuMonitor
             this.w_prgProc2 = new HumbleCpuMonitor.CustomProgressBar();
             this.w_prgProc3 = new HumbleCpuMonitor.CustomProgressBar();
             this.w_prgProc1 = new HumbleCpuMonitor.CustomProgressBar();
+            this.w_ttMachineInfo = new System.Windows.Forms.ToolTip(this.components);
             this.w_tblMain.SuspendLayout();
             this.w_tblProcs.SuspendLayout();
             this.SuspendLayout();
@@ -94,6 +96,7 @@ namespace HumbleCpuMonitor
             this.w_lblPhy.TabIndex = 0;
             this.w_lblPhy.Text = "PHY";
             this.w_lblPhy.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.w_ttMachineInfo.SetToolTip(this.w_lblPhy, "Physical memory usage");
             // 
             // w_prgPhy
             // 
@@ -121,6 +124,7 @@ namespace HumbleCpuMonitor
             this.w_lblCC.TabIndex = 0;
             this.w_lblCC.Text = "CC";
             this.w_lblCC.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.w_ttMachineInfo.SetToolTip(this.w_lblCC, "Memory Commit Charge");
             // 
             // w_prgPageFile
             // 
@@ -148,6 +152,7 @@ namespace HumbleCpuMonitor
             this.w_lblCpu.TabIndex = 0;
             this.w_lblCpu.Text = "CPU";
             this.w_lblCpu.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.w_ttMachineInfo.SetToolTip(this.w_lblCpu, "Overall CPU usage");
             // 
             // w_prgCpu
             // 
@@ -174,6 +179,7 @@ namespace HumbleCpuMonitor
             this.w_lblProc1.TabIndex = 4;
             this.w_lblProc1.Text = "Proc1";
             this.w_lblProc1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.w_ttMachineInfo.SetToolTip(this.w_lblProc1, "#1 process CPU usage");
             // 
             // w_lblProc2
             // 
@@ -185,6 +191,7 @@ namespace HumbleCpuMonitor
             this.w_lblProc2.TabIndex = 4;
             this.w_lblProc2.Text = "Proc2";
             this.w_lblProc2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.w_ttMachineInfo.SetToolTip(this.w_lblProc2, "#2 process CPU usage");
             // 
             // w_lblProc3
             // 
@@ -196,6 +203,7 @@ namespace HumbleCpuMonitor
             this.w_lblProc3.TabIndex = 4;
             this.w_lblProc3.Text = "Proc3";
             this.w_lblProc3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.w_ttMachineInfo.SetToolTip(this.w_lblProc3, "#3 process CPU usage");
             // 
             // w_tblProcs
             // 
@@ -287,5 +295,7 @@ namespace HumbleCpuMonitor
         }
 
         #endregion
+
+        private System.Windows.Forms.ToolTip w_ttMachineInfo;
     }
 }

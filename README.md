@@ -21,4 +21,4 @@ Main chart can now be chosen among Bar, Line and Scatter modes:
 
 Colors of the CPU ranges can now be customized through a configuration, which is persisted on disk:
 
-![image](https://github.com/SiMoStro/HumbleCpuMonitor/assets/7286466/91a7c8cd-4836-4cfb-b182-cb7acd8c81fd)
+![image](https://github.com/SiMoStro/HumbleCpuMonitor/assets/7286466/eefa3adf-c3f5-4a2e-8608-e9e49aca4836)

@@ -1,4 +1,5 @@
-﻿using HumbleCpuMonitor.Process;
+﻿using HumbleCpuMonitor.Config;
+using HumbleCpuMonitor.Process;
 using HumbleCpuMonitor.Win32;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,12 @@ namespace HumbleCpuMonitor
             w_prgProc1.Maximum = w_prgProc2.Maximum = w_prgProc3.Maximum = 100;
             _isLight = false;
             SetColors();
+            
+            if (ScenarioManager.Instance.Configuration.MachineInfoLocation.HasValue)
+            {
+                StartPosition = FormStartPosition.Manual;
+                Location = ScenarioManager.Instance.Configuration.MachineInfoLocation.Value;
+            }
         }
 
         private void HandleLeftDoubleClick()
@@ -89,6 +96,14 @@ namespace HumbleCpuMonitor
 
             Application.RemoveMessageFilter(_mouseHandler);
             _mouseHandler = null;
+            SaveLocation();
+        }
+
+        internal void SaveLocation()
+        {
+            if (!Visible) return;
+            ScenarioManager.Instance.Configuration.MachineInfoX = Location.X;
+            ScenarioManager.Instance.Configuration.MachineInfoY = Location.Y;
         }
 
         private void HandleTimerTick(object sender, EventArgs e)

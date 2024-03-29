@@ -134,6 +134,16 @@ namespace HumbleCpuMonitor.Config
         /// </summary>
         public ChartType ChartType { get; set; }
 
+        /// <summary>
+        /// Machine Info panel X position
+        /// </summary>
+        public int? MachineInfoX { get; set; }
+
+        /// <summary>
+        /// Machine Info panel Y position
+        /// </summary>
+        public int? MachineInfoY { get; set; }
+
         #region [XML ignore] Ready-to-use properties derived from serialized values
 
         [XmlIgnore]
@@ -153,6 +163,16 @@ namespace HumbleCpuMonitor.Config
 
         [XmlIgnore]
         internal SolidBrush[] Brushes { get; set; }
+
+        [XmlIgnore]
+        internal Point? MachineInfoLocation
+        {
+            get
+            {
+                if (MachineInfoX.HasValue && MachineInfoY.HasValue) return new Point(MachineInfoX.Value, MachineInfoY.Value);
+                return null;
+            }
+        }
 
         #endregion
 
@@ -297,6 +317,8 @@ namespace HumbleCpuMonitor.Config
             ChartLines = cd.ChartLines;
             MainWinX = cd.MainWinX;
             MainWinY = cd.MainWinY;
+            MachineInfoX = cd.MachineInfoX;
+            MachineInfoY = cd.MachineInfoY;
             MainWinHeight = cd.MainWinHeight;
             MainWinWidth = cd.MainWinWidth;
             MainWinCaptionLess = cd.MainWinCaptionLess;

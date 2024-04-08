@@ -9,6 +9,7 @@ using System.Linq;
 using HumbleCpuMonitor.Charts;
 using HumbleCpuMonitor.Process;
 using HumbleCpuMonitor.Config;
+using System.Collections.Generic;
 
 namespace HumbleCpuMonitor
 {
@@ -43,6 +44,8 @@ namespace HumbleCpuMonitor
         private MenuItem _miUseLineChart;
         private MenuItem _miUseScatterChart;
         private MenuItem _miUseFullColorChart;
+
+        private List<MenuItem> _updateIntervalMenuItem = new List<MenuItem>();
 
         private ProcessSelector _processSelector;
 
@@ -91,15 +94,14 @@ namespace HumbleCpuMonitor
             InitializeComponent();
 
             ScenarioManager.Instance.Initialize();
-
             Main = this;
-
             SuperPower.Enable();
             _self = System.Diagnostics.Process.GetCurrentProcess();
 
             _processes = new Processes();
             UpdateTitle();
 
+            _timer = new Timer { Interval = 1000 };
             _icons = new Icon[15];
             _iconSelectionStep = 100 / 15;
 
@@ -123,7 +125,6 @@ namespace HumbleCpuMonitor
             _totalCpuMode = true;
             SwitchChartMode(ScenarioManager.Instance.Configuration.ChartType);
 
-            _timer = new Timer { Interval = 1000 };
             _timer.Tick += HandleTick;
             _timer.Start();
         }
@@ -285,15 +286,20 @@ namespace HumbleCpuMonitor
 
             MenuItem upd = new MenuItem("Update Interval");
             _miUpdInsane = new MenuItem("1/4 second");
-            _miUpdInsane.Click += (o, e) => _timer.Interval = 250;
             _miUpdHalfSecond = new MenuItem("1/2 second");
-            _miUpdHalfSecond.Click += (o, e) => _timer.Interval = 500;
             _miUpdOneSecond = new MenuItem("1 second");
-            _miUpdOneSecond.Click += (o, e) => _timer.Interval = 1000;
             _miUpdTwoSeconds = new MenuItem("2 second");
-            _miUpdTwoSeconds.Click += (o, e) => _timer.Interval = 2000;
             _miUpdThreeSeconds = new MenuItem("3 second");
-            _miUpdThreeSeconds.Click += (o, e) => _timer.Interval = 3000;
+
+            _updateIntervalMenuItem.AddRange(new List<MenuItem> {
+                _miUpdInsane,
+                _miUpdHalfSecond,
+                _miUpdOneSecond,
+                _miUpdTwoSeconds,
+                _miUpdThreeSeconds
+            });
+            foreach(var mi in _updateIntervalMenuItem) mi.Click += HandleUpdateIntervalChange;
+            _miUpdOneSecond.PerformClick();
 
             MenuItem cType = new MenuItem("Chart type");
             _miUseBarChart = new MenuItem("Bar chart");
@@ -322,6 +328,7 @@ namespace HumbleCpuMonitor
                 if (_topProcs != null)
                 {
                     _topProcs.Close();
+                    _miTopProcsInfo.Checked = false;
                     return;
                 }
 
@@ -330,6 +337,7 @@ namespace HumbleCpuMonitor
                 {
                     _topProcs = null;
                 };
+                _miTopProcsInfo.Checked = true;
                 _topProcs.Show();
             };
 
@@ -339,6 +347,7 @@ namespace HumbleCpuMonitor
                 if (_machineInfo != null)
                 {
                     _machineInfo.Close();
+                    _miMachineInfo.Checked = false;
                     return;
                 }
 
@@ -347,6 +356,7 @@ namespace HumbleCpuMonitor
                 {
                     _machineInfo = null;
                 };
+                _miMachineInfo.Checked = true;
                 _machineInfo.Show();
             };
 
@@ -394,11 +404,25 @@ namespace HumbleCpuMonitor
             _trayIcon.ContextMenu = _menu;
         }
 
+        private void HandleUpdateIntervalChange(object sender, EventArgs e)
+        {
+            foreach (var mi in _updateIntervalMenuItem) mi.Checked = false;
+            MenuItem menuItem = (MenuItem)sender;
+            if(menuItem == _miUpdInsane) _timer.Interval = 250;
+            else if (menuItem == _miUpdHalfSecond) _timer.Interval = 500;
+            else if (menuItem == _miUpdOneSecond) _timer.Interval = 1000;
+            else if (menuItem == _miUpdTwoSeconds) _timer.Interval = 2000;
+            else if (menuItem == _miUpdThreeSeconds) _timer.Interval = 3000;
+            menuItem.Checked = true;
+        }
+
         private void OnConfigurationClosed()
         {
             _miniChart?.UpdateColors();
             foreach (var chart in _miniChartCpuId) chart?.UpdateColors();
         }
+
+        
 
         private void SwitchChartMode(ChartType chartMode)
         {

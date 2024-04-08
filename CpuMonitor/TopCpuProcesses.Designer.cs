@@ -205,6 +205,7 @@ namespace HumbleCpuMonitor
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "TopCpuProcesses";
+            this.ShowInTaskbar = false;
             this.Text = "TopCpuProcesses";
             this.w_tblMain.ResumeLayout(false);
             this.ResumeLayout(false);

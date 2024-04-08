@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing;
+using HumbleCpuMonitor.Config;
 
 namespace HumbleCpuMonitor
 {
@@ -52,6 +53,12 @@ namespace HumbleCpuMonitor
             };
             _timer.Tick += (s, a) => Snapshot();
             _timer.Start();
+
+            if (ScenarioManager.Instance.Configuration.TopProcsInfoLocation.HasValue)
+            {
+                StartPosition = FormStartPosition.Manual;
+                Location = ScenarioManager.Instance.Configuration.TopProcsInfoLocation.Value;
+            }
         }
 
         private void SetColors()
@@ -71,7 +78,15 @@ namespace HumbleCpuMonitor
         protected override void OnClosing(CancelEventArgs e)
         {
             _timer.Stop();
+            SaveLocation();
             base.OnClosing(e);
+        }
+
+        internal void SaveLocation()
+        {
+            if (!Visible) return;
+            ScenarioManager.Instance.Configuration.TopProcsInfoX = Location.X;
+            ScenarioManager.Instance.Configuration.TopProcsInfoY = Location.Y;
         }
 
         private void Snapshot()

@@ -166,6 +166,7 @@ namespace HumbleCpuMonitor
             config.MainWinHeight = Size.Height;
             config.ChartType = _chartMode;
             if (_machineInfo != null) _machineInfo.SaveLocation();
+            if (_topProcs != null) _topProcs.SaveLocation();
         }
 
         #endregion
@@ -270,6 +271,10 @@ namespace HumbleCpuMonitor
                 if (_machineInfo != null && _machineInfo.Visible)
                 {
                     _machineInfo.SaveLocation();
+                }
+                if(_topProcs != null && _topProcs.Visible)
+                {
+                    _topProcs.SaveLocation();
                 }
                 ScenarioManager.Instance.Save();
                 Application.Exit();

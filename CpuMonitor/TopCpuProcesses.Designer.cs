@@ -67,7 +67,7 @@ namespace HumbleCpuMonitor
             this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.w_tblMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.w_tblMain.Size = new System.Drawing.Size(291, 115);
+            this.w_tblMain.Size = new System.Drawing.Size(290, 134);
             this.w_tblMain.TabIndex = 0;
             // 
             // w_lblCpu2
@@ -75,9 +75,9 @@ namespace HumbleCpuMonitor
             this.w_lblCpu2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_lblCpu2.Location = new System.Drawing.Point(235, 23);
+            this.w_lblCpu2.Location = new System.Drawing.Point(235, 26);
             this.w_lblCpu2.Name = "w_lblCpu2";
-            this.w_lblCpu2.Size = new System.Drawing.Size(53, 23);
+            this.w_lblCpu2.Size = new System.Drawing.Size(52, 26);
             this.w_lblCpu2.TabIndex = 0;
             this.w_lblCpu2.Text = "<cpu2>";
             this.w_lblCpu2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -87,9 +87,9 @@ namespace HumbleCpuMonitor
             this.w_lblCpu3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_lblCpu3.Location = new System.Drawing.Point(235, 46);
+            this.w_lblCpu3.Location = new System.Drawing.Point(235, 52);
             this.w_lblCpu3.Name = "w_lblCpu3";
-            this.w_lblCpu3.Size = new System.Drawing.Size(53, 23);
+            this.w_lblCpu3.Size = new System.Drawing.Size(52, 26);
             this.w_lblCpu3.TabIndex = 0;
             this.w_lblCpu3.Text = "<cpu3>";
             this.w_lblCpu3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -99,9 +99,9 @@ namespace HumbleCpuMonitor
             this.w_lblCpu4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_lblCpu4.Location = new System.Drawing.Point(235, 69);
+            this.w_lblCpu4.Location = new System.Drawing.Point(235, 78);
             this.w_lblCpu4.Name = "w_lblCpu4";
-            this.w_lblCpu4.Size = new System.Drawing.Size(53, 23);
+            this.w_lblCpu4.Size = new System.Drawing.Size(52, 26);
             this.w_lblCpu4.TabIndex = 0;
             this.w_lblCpu4.Text = "<cpu4>";
             this.w_lblCpu4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -111,9 +111,9 @@ namespace HumbleCpuMonitor
             this.w_lblCpu5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_lblCpu5.Location = new System.Drawing.Point(235, 92);
+            this.w_lblCpu5.Location = new System.Drawing.Point(235, 104);
             this.w_lblCpu5.Name = "w_lblCpu5";
-            this.w_lblCpu5.Size = new System.Drawing.Size(53, 23);
+            this.w_lblCpu5.Size = new System.Drawing.Size(52, 30);
             this.w_lblCpu5.TabIndex = 0;
             this.w_lblCpu5.Text = "<cpu5>";
             this.w_lblCpu5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -126,7 +126,7 @@ namespace HumbleCpuMonitor
             this.w_lblProcName1.AutoEllipsis = true;
             this.w_lblProcName1.Location = new System.Drawing.Point(3, 0);
             this.w_lblProcName1.Name = "w_lblProcName1";
-            this.w_lblProcName1.Size = new System.Drawing.Size(226, 23);
+            this.w_lblProcName1.Size = new System.Drawing.Size(226, 26);
             this.w_lblProcName1.TabIndex = 0;
             this.w_lblProcName1.Text = "<proc_name_1>";
             this.w_lblProcName1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -138,7 +138,7 @@ namespace HumbleCpuMonitor
             | System.Windows.Forms.AnchorStyles.Right)));
             this.w_lblCpu1.Location = new System.Drawing.Point(235, 0);
             this.w_lblCpu1.Name = "w_lblCpu1";
-            this.w_lblCpu1.Size = new System.Drawing.Size(53, 23);
+            this.w_lblCpu1.Size = new System.Drawing.Size(52, 26);
             this.w_lblCpu1.TabIndex = 0;
             this.w_lblCpu1.Text = "<cpu1>";
             this.w_lblCpu1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -149,9 +149,9 @@ namespace HumbleCpuMonitor
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.w_lblProcName2.AutoEllipsis = true;
-            this.w_lblProcName2.Location = new System.Drawing.Point(3, 23);
+            this.w_lblProcName2.Location = new System.Drawing.Point(3, 26);
             this.w_lblProcName2.Name = "w_lblProcName2";
-            this.w_lblProcName2.Size = new System.Drawing.Size(226, 23);
+            this.w_lblProcName2.Size = new System.Drawing.Size(226, 26);
             this.w_lblProcName2.TabIndex = 0;
             this.w_lblProcName2.Text = "<proc_name_2>";
             this.w_lblProcName2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -162,9 +162,9 @@ namespace HumbleCpuMonitor
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.w_lblProcName3.AutoEllipsis = true;
-            this.w_lblProcName3.Location = new System.Drawing.Point(3, 46);
+            this.w_lblProcName3.Location = new System.Drawing.Point(3, 52);
             this.w_lblProcName3.Name = "w_lblProcName3";
-            this.w_lblProcName3.Size = new System.Drawing.Size(226, 23);
+            this.w_lblProcName3.Size = new System.Drawing.Size(226, 26);
             this.w_lblProcName3.TabIndex = 0;
             this.w_lblProcName3.Text = "<proc_name_3>";
             this.w_lblProcName3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -175,9 +175,9 @@ namespace HumbleCpuMonitor
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.w_lblProcName4.AutoEllipsis = true;
-            this.w_lblProcName4.Location = new System.Drawing.Point(3, 69);
+            this.w_lblProcName4.Location = new System.Drawing.Point(3, 78);
             this.w_lblProcName4.Name = "w_lblProcName4";
-            this.w_lblProcName4.Size = new System.Drawing.Size(226, 23);
+            this.w_lblProcName4.Size = new System.Drawing.Size(226, 26);
             this.w_lblProcName4.TabIndex = 0;
             this.w_lblProcName4.Text = "<proc_name_4>";
             this.w_lblProcName4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -188,9 +188,9 @@ namespace HumbleCpuMonitor
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.w_lblProcName5.AutoEllipsis = true;
-            this.w_lblProcName5.Location = new System.Drawing.Point(3, 92);
+            this.w_lblProcName5.Location = new System.Drawing.Point(3, 104);
             this.w_lblProcName5.Name = "w_lblProcName5";
-            this.w_lblProcName5.Size = new System.Drawing.Size(226, 23);
+            this.w_lblProcName5.Size = new System.Drawing.Size(226, 30);
             this.w_lblProcName5.TabIndex = 0;
             this.w_lblProcName5.Text = "<proc_name_5>";
             this.w_lblProcName5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -200,7 +200,7 @@ namespace HumbleCpuMonitor
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(291, 115);
+            this.ClientSize = new System.Drawing.Size(290, 134);
             this.Controls.Add(this.w_tblMain);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

@@ -144,6 +144,16 @@ namespace HumbleCpuMonitor.Config
         /// </summary>
         public int? MachineInfoY { get; set; }
 
+        /// <summary>
+        /// Top Processes Info panel X position
+        /// </summary>
+        public int? TopProcsInfoX { get; set; }
+
+        /// <summary>
+        /// Top Processes Info panel Y position
+        /// </summary>
+        public int? TopProcsInfoY { get; set; }
+
         #region [XML ignore] Ready-to-use properties derived from serialized values
 
         [XmlIgnore]
@@ -170,6 +180,16 @@ namespace HumbleCpuMonitor.Config
             get
             {
                 if (MachineInfoX.HasValue && MachineInfoY.HasValue) return new Point(MachineInfoX.Value, MachineInfoY.Value);
+                return null;
+            }
+        }
+
+        [XmlIgnore]
+        internal Point? TopProcsInfoLocation
+        {
+            get
+            {
+                if (TopProcsInfoX.HasValue && TopProcsInfoY.HasValue) return new Point(TopProcsInfoX.Value, TopProcsInfoY.Value);
                 return null;
             }
         }
@@ -319,6 +339,8 @@ namespace HumbleCpuMonitor.Config
             MainWinY = cd.MainWinY;
             MachineInfoX = cd.MachineInfoX;
             MachineInfoY = cd.MachineInfoY;
+            TopProcsInfoX = cd.TopProcsInfoX;
+            TopProcsInfoY = cd.TopProcsInfoY;
             MainWinHeight = cd.MainWinHeight;
             MainWinWidth = cd.MainWinWidth;
             MainWinCaptionLess = cd.MainWinCaptionLess;

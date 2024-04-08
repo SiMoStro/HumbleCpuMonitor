@@ -102,7 +102,7 @@ namespace HumbleCpuMonitor
 
             for(int i = 0; i < num; i++)
             {
-                _procs[i].Text = procs[i].Name;
+                _procs[i].Text = $"[{procs[i].Pid}] {procs[i].Name}";
                 _cpu[i].Text = procs[i].Snapshot.OverallCpuPerc.ToString("P");
             }
 

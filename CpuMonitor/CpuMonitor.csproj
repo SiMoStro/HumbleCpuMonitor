@@ -113,6 +113,12 @@
       <DependentUpon>ProcessSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Process\ProcessSnapshot.cs" />
+    <Compile Include="TopCpuProcesses.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TopCpuProcesses.Designer.cs">
+      <DependentUpon>TopCpuProcesses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities.cs" />
     <Compile Include="Win32\Advapi32.cs" />
     <Compile Include="FormMain.cs">
@@ -155,6 +161,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="TopCpuProcesses.resx">
+      <DependentUpon>TopCpuProcesses.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

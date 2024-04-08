@@ -34,6 +34,19 @@ namespace HumbleCpuMonitor.Process
         }
 
         /// <summary>
+        /// Overall CPU% usage since the creation of the process
+        /// </summary>
+        public double OverallCpuPerc
+        {
+            get
+            {
+                double timeDeltaMillisecs = _lastTime.Subtract(CreationTime).TotalMilliseconds;
+                double avgCpuUsage = CpuTime / timeDeltaMillisecs;
+                return avgCpuUsage;
+            }
+        }
+
+        /// <summary>
         /// Total process CPU time (Kernel + user)
         /// </summary>
         public double CpuTime

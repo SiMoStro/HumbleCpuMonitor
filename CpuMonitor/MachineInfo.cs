@@ -11,11 +11,15 @@ namespace HumbleCpuMonitor
 {
     public partial class MachineInfo : Form
     {
+        #region [private] objects and vars
+
         private Timer _timer = new Timer();
         private MEMORYSTATUSEX _mem = new MEMORYSTATUSEX();
         private MouseMessageFilter _mouseHandler;
         private long _counter;
         private bool _isLight;
+
+        #endregion
 
         public MachineInfo()
         {
@@ -25,12 +29,15 @@ namespace HumbleCpuMonitor
 
             Snapshot();
 
-            _mouseHandler = new MouseMessageFilter(Handle);
-            _mouseHandler.LeftButtonDoubleClick = HandleLeftDoubleClick;
+            _mouseHandler = new MouseMessageFilter(Handle)
+            {
+                LeftButtonDoubleClick = HandleLeftDoubleClick
+            };
             Application.AddMessageFilter(_mouseHandler);
 
             _timer.Interval = 1000;
             _timer.Tick += HandleTimerTick;
+            _timer.Start();
             w_prgPhy.Minimum = w_prgPageFile.Minimum = w_prgCpu.Minimum = 0;
             w_prgPhy.Maximum = w_prgPageFile.Maximum = w_prgCpu.Maximum = 100;
 
@@ -94,6 +101,7 @@ namespace HumbleCpuMonitor
         {
             base.OnClosing(e);
 
+            _timer.Stop();
             Application.RemoveMessageFilter(_mouseHandler);
             _mouseHandler = null;
             SaveLocation();
@@ -155,14 +163,6 @@ namespace HumbleCpuMonitor
                 w_prgProc3.Value = p;
                 w_prgProc3.Text = proc[2].Name;
             }
-        }
-
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-
-            if (Visible) _timer.Start();
-            else _timer.Stop();
         }
     }
 }

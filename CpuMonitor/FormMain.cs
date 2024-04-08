@@ -36,6 +36,7 @@ namespace HumbleCpuMonitor
         private MenuItem _miUpdTwoSeconds;
         private MenuItem _miUpdThreeSeconds;
         private MenuItem _miMachineInfo;
+        private MenuItem _miTopProcsInfo;
         private MenuItem _configMenu;
 
         private MenuItem _miUseBarChart;
@@ -64,6 +65,7 @@ namespace HumbleCpuMonitor
         private System.Diagnostics.Process _self;
 
         private MachineInfo _machineInfo;
+        private TopCpuProcesses _topProcs;
 
         private MouseMessageFilter _mouseHandler;
         int? _borderSize = null;
@@ -309,6 +311,23 @@ namespace HumbleCpuMonitor
                 UpdateVisualizationMode();
             };
 
+            _miTopProcsInfo = new MenuItem("Top Processes");
+            _miTopProcsInfo.Click += (o, e) =>
+            {
+                if (_topProcs != null)
+                {
+                    _topProcs.Close();
+                    return;
+                }
+
+                _topProcs = new TopCpuProcesses();
+                _topProcs.FormClosing += (o2, e2) =>
+                {
+                    _topProcs = null;
+                };
+                _topProcs.Show();
+            };
+
             _miMachineInfo = new MenuItem("Machine info");
             _miMachineInfo.Click += (o, e) =>
             {
@@ -355,6 +374,7 @@ namespace HumbleCpuMonitor
             _menu.MenuItems.Add(cType);
             _menu.MenuItems.Add(_miToggleSingleCpuMenu);
             _menu.MenuItems.Add(_selectProcess);
+            _menu.MenuItems.Add(_miTopProcsInfo);
             _menu.MenuItems.Add(_miMachineInfo);
             _menu.MenuItems.Add(_configMenu);
             _menu.MenuItems.Add(new MenuItem("-"));
@@ -461,6 +481,13 @@ namespace HumbleCpuMonitor
         {
             if (_processes.ProcessCount < 3) return null;
             return _processes.Descriptors.OrderByDescending(p => p.Snapshot.CpuPerc).Take(3).ToArray();
+        }
+
+        public ProcessDescriptor[] GetOverallTopProc(int num)
+        {
+            int min = Math.Min(num, _processes.Descriptors.Count);
+            if (min == 0) return null;
+            return _processes.Descriptors.OrderByDescending(p => p.Snapshot.OverallCpuPerc).Take(min).ToArray();
         }
 
         private void UpdateVisualizationMode(bool restart = true)

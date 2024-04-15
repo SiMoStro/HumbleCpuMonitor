@@ -125,6 +125,8 @@ namespace HumbleCpuMonitor
             _totalCpuMode = true;
             SwitchChartMode(ScenarioManager.Instance.Configuration.ChartType);
 
+            ConfigurationForm.ConfigurationFormClosed += HandleConfigurationFormClosed;
+
             _timer.Tick += HandleTick;
             _timer.Start();
         }
@@ -155,6 +157,8 @@ namespace HumbleCpuMonitor
             {
                 Size = new Size(config.MainWinWidth.Value, config.MainWinHeight.Value);
             }
+
+            TopMost = config.MainChartTopmost;
         }
 
         private void UpdateConfigData()
@@ -375,7 +379,6 @@ namespace HumbleCpuMonitor
             _configMenu.Click += (o, e) =>
             {
                 ConfigurationForm.ShowConfig();
-                OnConfigurationClosed();
             };
 
             upd.MenuItems.Add(_miUpdInsane);
@@ -416,14 +419,6 @@ namespace HumbleCpuMonitor
             menuItem.Checked = true;
         }
 
-        private void OnConfigurationClosed()
-        {
-            _miniChart?.UpdateColors();
-            foreach (var chart in _miniChartCpuId) chart?.UpdateColors();
-        }
-
-        
-
         private void SwitchChartMode(ChartType chartMode)
         {
             _miUseBarChart.Checked = _miUseScatterChart.Checked = _miUseLineChart.Checked = _miUseFullColorChart.Checked = false;
@@ -457,6 +452,16 @@ namespace HumbleCpuMonitor
                 ProcessObserver po = new ProcessObserver(ps.SelectedPid, ps.SelectedProcessExecutable);
             }
             _processSelector = null;
+        }
+
+        private void HandleConfigurationFormClosed(object sender, EventArgs e)
+        {
+            _miniChart?.UpdateColors();
+            foreach (MiniChartBase chart in _miniChartCpuId)
+            {
+                chart?.UpdateColors();
+            }
+            TopMost = ScenarioManager.Instance.Configuration.MainChartTopmost;
         }
 
         private void ToggleWindowVisibility()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using HumbleCpuMonitor.Charts;
+using HumbleCpuMonitor.Config;
 using HumbleCpuMonitor.Win32;
 
 namespace HumbleCpuMonitor
@@ -66,6 +67,18 @@ namespace HumbleCpuMonitor
             _form.Show();
             UpdateTitle();
             Start();
+            ConfigurationForm.ConfigurationFormClosed += HandleConfigurationFormClosed;
+            AlignPropertiesToConfiguration();
+        }
+
+        private void HandleConfigurationFormClosed(object sender, EventArgs e)
+        {
+            AlignPropertiesToConfiguration();
+        }
+
+        private void AlignPropertiesToConfiguration()
+        {
+            _form.TopMost = ScenarioManager.Instance.Configuration.ProcessChartTopmost;
         }
 
         private void HandleProcessExited(object sender, EventArgs e)
@@ -112,7 +125,13 @@ namespace HumbleCpuMonitor
             _form.Icon = FormMain.GetIcon(10);
             _panel.Controls.Add(_chart);
             _form.Controls.Add(_panel);
+            _form.FormClosing += HandleFormClosing;
             _form.FormClosed += HandleFormClosed;
+        }
+
+        private void HandleFormClosing(object sender, FormClosingEventArgs e)
+        {
+            ConfigurationForm.ConfigurationFormClosed -= HandleConfigurationFormClosed;
         }
 
         private void HandleFormClosed(object sender, FormClosedEventArgs e)

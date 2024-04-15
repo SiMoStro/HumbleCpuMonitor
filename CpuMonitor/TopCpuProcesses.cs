@@ -15,7 +15,7 @@ namespace HumbleCpuMonitor
         private Timer _timer;
         private bool _isLight;
         private MouseMessageFilter _mouseHandler;
-        
+
         #endregion
 
         public TopCpuProcesses()
@@ -23,7 +23,8 @@ namespace HumbleCpuMonitor
             InitializeComponent();
 
             _mouseHandler = new MouseMessageFilter(Handle);
-            _mouseHandler.LeftButtonDoubleClick = new Action(() => {
+            _mouseHandler.LeftButtonDoubleClick = new Action(() =>
+            {
                 _isLight = !_isLight;
                 SetColors();
             });
@@ -54,16 +55,29 @@ namespace HumbleCpuMonitor
             _timer.Tick += (s, a) => Snapshot();
             _timer.Start();
 
+            AlignPropertiesToConfig();
+            ConfigurationForm.ConfigurationFormClosed += HandleConfigurationFormClosed;
+        }
+
+        private void HandleConfigurationFormClosed(object sender, EventArgs e)
+        {
+            AlignPropertiesToConfig();
+        }
+
+        private void AlignPropertiesToConfig()
+        {
             if (ScenarioManager.Instance.Configuration.TopProcsInfoLocation.HasValue)
             {
                 StartPosition = FormStartPosition.Manual;
                 Location = ScenarioManager.Instance.Configuration.TopProcsInfoLocation.Value;
             }
+
+            TopMost = ScenarioManager.Instance.Configuration.TopProcessesTopmost;
         }
 
         private void SetColors()
         {
-            if(_isLight)
+            if (_isLight)
             {
                 BackColor = Color.FromKnownColor(KnownColor.White);
                 ForeColor = Color.FromKnownColor(KnownColor.Black);
@@ -77,6 +91,7 @@ namespace HumbleCpuMonitor
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            ConfigurationForm.ConfigurationFormClosed -= HandleConfigurationFormClosed;
             _timer.Stop();
             SaveLocation();
             base.OnClosing(e);
@@ -100,7 +115,7 @@ namespace HumbleCpuMonitor
                 num = Math.Min(procsCount, procs.Length);
             }
 
-            for(int i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
             {
                 _procs[i].Text = $"[{procs[i].Pid}] {procs[i].Name}";
                 _cpu[i].Text = procs[i].Snapshot.OverallCpuPerc.ToString("P");

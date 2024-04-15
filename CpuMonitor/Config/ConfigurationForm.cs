@@ -8,18 +8,23 @@ namespace HumbleCpuMonitor.Config
 {
     public partial class ConfigurationForm : Form
     {
-        List<Panel> _valueColorPanels = new List<Panel>();
-        List<Panel> _allPanels = new List<Panel>();
+        #region [private]
+
+        private List<Panel> _valueColorPanels = new List<Panel>();
+        private List<Panel> _allPanels = new List<Panel>();
+        private static ConfigurationForm _instance;
+
+        #endregion
+
+        internal static event EventHandler ConfigurationFormClosed;
 
         public ConfigurationForm()
         {
             InitializeComponent();
-         
-
-            Initialize();
+            InitializeData();
         }
         
-        public void Initialize()
+        public void InitializeData()
         {
             _valueColorPanels.AddRange(new List<Panel> { w_pnl0, w_pnl1, w_pnl2, w_pnl3, w_pnl4, w_pnl5, w_pnl6, w_pnl7, w_pnl8, w_pnl9 });
             for (int i = 0; i < ScenarioManager.Instance.Configuration.Colors.Length; i++)
@@ -29,6 +34,11 @@ namespace HumbleCpuMonitor.Config
             w_pnlForeground.BackColor = ScenarioManager.Instance.Configuration.Foreground;
             w_pnlBackground.BackColor = ScenarioManager.Instance.Configuration.Background;
             w_pnlChartLines.BackColor = ScenarioManager.Instance.Configuration.ChartLines;
+
+            w_cbMainChartTopmost.Checked = ScenarioManager.Instance.Configuration.MainChartTopmost;
+            w_cbProcessChartTopmost.Checked = ScenarioManager.Instance.Configuration.ProcessChartTopmost;
+            w_cbTopProcessesTopmost.Checked = ScenarioManager.Instance.Configuration.TopProcessesTopmost;
+            w_cbMachineInfoTopmost.Checked = ScenarioManager.Instance.Configuration.MachineInfoTopmost;
 
             _allPanels.AddRange(_valueColorPanels);
             _allPanels.Add(w_pnlForeground);
@@ -63,16 +73,26 @@ namespace HumbleCpuMonitor.Config
             ScenarioManager.Instance.Configuration.Background = w_pnlBackground.BackColor;
             ScenarioManager.Instance.Configuration.Foreground = w_pnlForeground.BackColor;
             ScenarioManager.Instance.Configuration.ChartLines = w_pnlChartLines.BackColor;
+            ScenarioManager.Instance.Configuration.MainChartTopmost = w_cbMainChartTopmost.Checked;
+            ScenarioManager.Instance.Configuration.ProcessChartTopmost = w_cbProcessChartTopmost.Checked;
+            ScenarioManager.Instance.Configuration.TopProcessesTopmost = w_cbTopProcessesTopmost.Checked;
+            ScenarioManager.Instance.Configuration.MachineInfoTopmost = w_cbMachineInfoTopmost.Checked;
             _instance = null;
         }
 
-        static ConfigurationForm _instance;
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            ConfigurationFormClosed?.Invoke(this, EventArgs.Empty);
+        }
 
         internal static void ShowConfig()
         {
             if (_instance != null) return;
-            _instance = new ConfigurationForm();
-            _instance.TopMost = true;
+            _instance = new ConfigurationForm
+            {
+                TopMost = true
+            };
             _instance.ShowDialog();
         }
 

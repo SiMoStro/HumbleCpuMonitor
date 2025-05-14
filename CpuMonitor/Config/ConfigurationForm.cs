@@ -10,7 +10,10 @@ namespace HumbleCpuMonitor.Config
     {
         private List<Panel> _valueColorPanels = new List<Panel>();
         private List<Panel> _allPanels = new List<Panel>();
+        private static ConfigurationForm _instance;
         private ShortcutsControl _shortcuts;
+
+        internal static event EventHandler ConfigurationFormClosed;
 
         public ConfigurationForm()
         {
@@ -41,6 +44,11 @@ namespace HumbleCpuMonitor.Config
             w_pnlForeground.BackColor = ScenarioManager.Instance.Configuration.Foreground;
             w_pnlBackground.BackColor = ScenarioManager.Instance.Configuration.Background;
             w_pnlChartLines.BackColor = ScenarioManager.Instance.Configuration.ChartLines;
+
+            w_cbMainChartTopmost.Checked = ScenarioManager.Instance.Configuration.MainChartTopmost;
+            w_cbProcessChartTopmost.Checked = ScenarioManager.Instance.Configuration.ProcessChartTopmost;
+            w_cbTopProcessesTopmost.Checked = ScenarioManager.Instance.Configuration.TopProcessesTopmost;
+            w_cbMachineInfoTopmost.Checked = ScenarioManager.Instance.Configuration.MachineInfoTopmost;
 
             _allPanels.AddRange(_valueColorPanels);
             _allPanels.Add(w_pnlForeground);
@@ -76,10 +84,18 @@ namespace HumbleCpuMonitor.Config
             ScenarioManager.Instance.Configuration.Background = w_pnlBackground.BackColor;
             ScenarioManager.Instance.Configuration.Foreground = w_pnlForeground.BackColor;
             ScenarioManager.Instance.Configuration.ChartLines = w_pnlChartLines.BackColor;
+            ScenarioManager.Instance.Configuration.MainChartTopmost = w_cbMainChartTopmost.Checked;
+            ScenarioManager.Instance.Configuration.ProcessChartTopmost = w_cbProcessChartTopmost.Checked;
+            ScenarioManager.Instance.Configuration.TopProcessesTopmost = w_cbTopProcessesTopmost.Checked;
+            ScenarioManager.Instance.Configuration.MachineInfoTopmost = w_cbMachineInfoTopmost.Checked;
             _instance = null;
         }
 
-        static ConfigurationForm _instance;
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            ConfigurationFormClosed?.Invoke(this, EventArgs.Empty);
+        }
 
         internal static void ShowConfig()
         {

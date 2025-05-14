@@ -287,7 +287,6 @@ namespace HumbleCpuMonitor
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "MachineInfo";
-            this.TopMost = true;
             this.w_tblMain.ResumeLayout(false);
             this.w_tblProcs.ResumeLayout(false);
             this.ResumeLayout(false);

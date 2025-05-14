@@ -45,12 +45,25 @@ namespace HumbleCpuMonitor
             w_prgProc1.Maximum = w_prgProc2.Maximum = w_prgProc3.Maximum = 100;
             _isLight = false;
             SetColors();
-            
+
+            ConfigurationForm.ConfigurationFormClosed += HandleConfigurationClosed;
+            AlignPropertiesToConfig();
+        }
+
+        private void HandleConfigurationClosed(object sender, EventArgs e)
+        {
+            AlignPropertiesToConfig();
+        }
+
+        private void AlignPropertiesToConfig()
+        {
             if (ScenarioManager.Instance.Configuration.MachineInfoLocation.HasValue)
             {
                 StartPosition = FormStartPosition.Manual;
                 Location = ScenarioManager.Instance.Configuration.MachineInfoLocation.Value;
             }
+
+            TopMost = ScenarioManager.Instance.Configuration.MachineInfoTopmost;
         }
 
         private void HandleLeftDoubleClick()
@@ -101,6 +114,7 @@ namespace HumbleCpuMonitor
         {
             base.OnClosing(e);
 
+            ConfigurationForm.ConfigurationFormClosed -= HandleConfigurationClosed;
             _timer.Stop();
             Application.RemoveMessageFilter(_mouseHandler);
             _mouseHandler = null;

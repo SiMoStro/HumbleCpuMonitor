@@ -154,6 +154,26 @@ namespace HumbleCpuMonitor.Config
         /// </summary>
         public int? TopProcsInfoY { get; set; }
 
+        /// <summary>
+        /// Main chart topmost property
+        /// </summary>
+        public bool MainChartTopmost { get; set; }
+
+        /// <summary>
+        /// Process chart topmost property
+        /// </summary>
+        public bool ProcessChartTopmost { get; set; }
+
+        /// <summary>
+        /// Top Processes toolbox topmost property
+        /// </summary>
+        public bool TopProcessesTopmost { get; set; }
+
+        /// <summary>
+        /// Machine Info toolbox topmost property
+        /// </summary>
+        public bool MachineInfoTopmost { get; set; }
+
         #region [XML ignore] Ready-to-use properties derived from serialized values
 
         [XmlIgnore]
@@ -327,6 +347,10 @@ namespace HumbleCpuMonitor.Config
             MainWinWidth = cd.MainWinWidth;
             MainWinCaptionLess = cd.MainWinCaptionLess;
             ChartType = cd.ChartType;
+            MainChartTopmost = cd.MainChartTopmost;
+            ProcessChartTopmost = cd.ProcessChartTopmost;
+            TopProcessesTopmost = cd.TopProcessesTopmost;
+            MachineInfoTopmost = cd.MachineInfoTopmost;
         }
 
         #endregion

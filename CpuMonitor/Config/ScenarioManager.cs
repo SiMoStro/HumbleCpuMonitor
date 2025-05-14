@@ -11,6 +11,8 @@ namespace HumbleCpuMonitor.Config
 
         internal ConfigData Configuration { get; private set; }
 
+        internal LauncherConfig Launcher { get; private set; }
+
         #region Singleton
 
         private static volatile ScenarioManager _instance;
@@ -54,7 +56,7 @@ namespace HumbleCpuMonitor.Config
 
         public void Initialize()
         {
-            string filename = GetFullPath();
+            string filename = Utilities.GetConfigFilePath(ScenarioFilename);
             if (!File.Exists(filename))
             {
                 Configuration = new ConfigData();
@@ -66,21 +68,13 @@ namespace HumbleCpuMonitor.Config
 
         internal void Save()
         {
-            Configuration.SaveData(GetFullPath());
+            Configuration.SaveData(Utilities.GetConfigFilePath(ScenarioFilename));
         }
 
         internal void SetNewColors(List<Color> colors)
         {
             if (colors.Count != 10) return;
             Configuration.SetValueColors(colors);
-        }
-
-        private string GetFullPath()
-        {
-            string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string fullPath = Path.Combine(appDir, "HumbleCpuMonitor");
-            string filename = Path.Combine(fullPath, ScenarioFilename);
-            return filename;
         }
     }
 }

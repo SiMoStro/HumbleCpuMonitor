@@ -8,17 +8,29 @@ namespace HumbleCpuMonitor.Config
 {
     public partial class ConfigurationForm : Form
     {
-        List<Panel> _valueColorPanels = new List<Panel>();
-        List<Panel> _allPanels = new List<Panel>();
+        private List<Panel> _valueColorPanels = new List<Panel>();
+        private List<Panel> _allPanels = new List<Panel>();
+        private ShortcutsControl _shortcuts;
 
         public ConfigurationForm()
         {
             InitializeComponent();
-         
+            _shortcuts = new ShortcutsControl
+            {
+                Dock = DockStyle.Fill
+            };
+            _shortcuts.Apply += HandleShortcutApply;
+            w_tabPageShortcuts.Controls.Add(_shortcuts);
+            _shortcuts.Initialize(ShortcutManager.Instance.Items);
 
             Initialize();
         }
-        
+
+        private void HandleShortcutApply(object sender, EventArgs e)
+        {
+            ShortcutManager.Instance.UpdateShortcuts(_shortcuts.Items);
+        }
+
         public void Initialize()
         {
             _valueColorPanels.AddRange(new List<Panel> { w_pnl0, w_pnl1, w_pnl2, w_pnl3, w_pnl4, w_pnl5, w_pnl6, w_pnl7, w_pnl8, w_pnl9 });
@@ -57,6 +69,7 @@ namespace HumbleCpuMonitor.Config
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
+            _shortcuts.Apply -= HandleShortcutApply;
             List<Color> newColors = new List<Color>();
             foreach (Panel p in _valueColorPanels) newColors.Add(p.BackColor);
             ScenarioManager.Instance.SetNewColors(newColors);
@@ -71,8 +84,10 @@ namespace HumbleCpuMonitor.Config
         internal static void ShowConfig()
         {
             if (_instance != null) return;
-            _instance = new ConfigurationForm();
-            _instance.TopMost = true;
+            _instance = new ConfigurationForm
+            {
+                TopMost = true
+            };
             _instance.ShowDialog();
         }
 

@@ -264,13 +264,8 @@ namespace HumbleCpuMonitor.Config
         {
             try
             {
-                FileInfo file = new FileInfo(filename);
-                if (!file.Exists) return;
-
-                string serializedData = File.ReadAllText(filename);
-                XmlSerializer xmlSerializer = new XmlSerializer(GetType());
-                StringReader textWriter = new StringReader(serializedData);
-                ConfigData cd = (ConfigData) xmlSerializer.Deserialize(textWriter);
+                ConfigData cd = SerializationExt.DeserializeFromFile<ConfigData>(filename);
+                if (cd == null) return;
                 InitFromInstance(cd);
             }
             catch (Exception e)
@@ -281,20 +276,7 @@ namespace HumbleCpuMonitor.Config
 
         internal void SaveData(string filename)
         {
-            string saveData = null;
-            XmlSerializer xmlSerializer = new XmlSerializer(GetType());
-            using (StringWriter textWriter = new StringWriter())
-            {
-                xmlSerializer.Serialize(textWriter, this);
-                saveData = textWriter.ToString();
-            }
-            if (saveData == null) return;
-            FileInfo fi = new FileInfo(filename);
-            if (!fi.Directory.Exists) fi.Directory.Create();
-            fi.Directory.Refresh();
-            if (!fi.Directory.Exists) return;
-            if (fi.Exists) fi.Delete();
-            File.WriteAllText(filename, saveData);
+            this.SerializeToFile(filename);
         }
 
         #endregion

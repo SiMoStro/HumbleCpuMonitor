@@ -93,7 +93,17 @@
     <Compile Include="Config\ConfigurationForm.Designer.cs">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config\LauncherConfig.cs" />
+    <Compile Include="Config\LauncherItem.cs" />
     <Compile Include="Config\ScenarioManager.cs" />
+    <Compile Include="Config\SerializationExt.cs" />
+    <Compile Include="Config\ShortcutManager.cs" />
+    <Compile Include="Config\ShortcutsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Config\ShortcutsControl.Designer.cs">
+      <DependentUpon>ShortcutsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -140,6 +150,9 @@
     <Compile Include="Win32\User32.cs" />
     <EmbeddedResource Include="Config\ConfigurationForm.resx">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\ShortcutsControl.resx">
+      <DependentUpon>ShortcutsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

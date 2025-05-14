@@ -39,6 +39,7 @@ namespace HumbleCpuMonitor
         private MenuItem _miMachineInfo;
         private MenuItem _miTopProcsInfo;
         private MenuItem _configMenu;
+        private MenuItem _shortcutMenu;
 
         private MenuItem _miUseBarChart;
         private MenuItem _miUseLineChart;
@@ -94,6 +95,8 @@ namespace HumbleCpuMonitor
             InitializeComponent();
 
             ScenarioManager.Instance.Initialize();
+            ShortcutManager.Instance.Initialize();
+
             Main = this;
             SuperPower.Enable();
             _self = System.Diagnostics.Process.GetCurrentProcess();
@@ -278,6 +281,7 @@ namespace HumbleCpuMonitor
                     _topProcs.SaveLocation();
                 }
                 ScenarioManager.Instance.Save();
+                ShortcutManager.Instance.Save();
                 Application.Exit();
             };
 
@@ -378,6 +382,8 @@ namespace HumbleCpuMonitor
                 OnConfigurationClosed();
             };
 
+            _shortcutMenu = new MenuItem("Shortcut");
+
             upd.MenuItems.Add(_miUpdInsane);
             upd.MenuItems.Add(_miUpdHalfSecond);
             upd.MenuItems.Add(_miUpdOneSecond);
@@ -392,6 +398,7 @@ namespace HumbleCpuMonitor
             _menu.MenuItems.Add(_miTopProcsInfo);
             _menu.MenuItems.Add(_miMachineInfo);
             _menu.MenuItems.Add(_configMenu);
+            _menu.MenuItems.Add(_shortcutMenu);
             _menu.MenuItems.Add(new MenuItem("-"));
             _menu.MenuItems.Add(_miExitMenu);
 
@@ -400,6 +407,11 @@ namespace HumbleCpuMonitor
                 _miToggleShowHideMenu.Text = Visible ? "Hide CPU chart" : "Show CPU chart";
                 _miToggleSingleCpuMenu.Text = _totalCpuMode ? "Show separate CPUs" : "Show Total CPU usage";
                 _selectProcess.Enabled = (_processSelector == null);
+
+                _shortcutMenu.MenuItems.Clear();
+                MenuItem[] mi = ShortcutManager.Instance.RootMenuItems;
+                _shortcutMenu.MenuItems.AddRange(mi);
+                _shortcutMenu.Visible = mi.Length > 0;
             };
             _trayIcon.ContextMenu = _menu;
         }

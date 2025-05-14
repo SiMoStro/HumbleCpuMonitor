@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 
 namespace HumbleCpuMonitor
 {
@@ -15,6 +16,14 @@ namespace HumbleCpuMonitor
             if (bytes < MegaBytes) return bytes / KiloBytes + "KB";
             if (bytes < GigaBytes) return bytes / MegaBytes + "MB";
             return bytes.ToString();
+        }
+
+        public static string GetConfigFilePath(string file)
+        {
+            string appDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string fullPath = Path.Combine(appDir, "HumbleCpuMonitor");
+            string filename = Path.Combine(fullPath, file);
+            return filename;
         }
     }
 

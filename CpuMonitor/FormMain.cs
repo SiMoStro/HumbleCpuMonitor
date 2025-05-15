@@ -27,6 +27,8 @@ namespace HumbleCpuMonitor
         private int _cpuIconIndex;
         private ChartType _chartMode;
 
+        MethodInfo _trayShowContextMenuInvoker;
+
         private ContextMenu _rightClickMenu;
         private ContextMenu _leftClickMenu;
         private MenuItem _miExitMenu;
@@ -119,8 +121,8 @@ namespace HumbleCpuMonitor
 
             _theCPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             _trayIcon = new NotifyIcon();
-            _trayIcon.MouseDown += HandleMouseDown;
-            _trayIcon.DoubleClick += (o, e) => ToggleWindowVisibility();
+            _trayIcon.MouseDown += HandleTrayIconMouseDown;
+            _trayIcon.DoubleClick += HandleTrayIconDoubleClick;
 
             LoadIcons();
             BuildContextMenu();
@@ -136,19 +138,48 @@ namespace HumbleCpuMonitor
             _timer.Start();
         }
 
-        private void HandleMouseDown(object sender, MouseEventArgs e)
+        private void HandleTrayIconDoubleClick(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if(_singleClickTimer != null)
             {
-                _trayIcon.ContextMenu = _rightClickMenu;
+                _singleClickTimer.Tag = new object();
             }
-            else if (e.Button == MouseButtons.Left)
+            ToggleWindowVisibility();
+        }
+
+        Timer _singleClickTimer;
+
+        private void HandleTrayIconMouseDown(object sender, MouseEventArgs e)
+        {
+            if (_trayShowContextMenuInvoker == null)
             {
-                _trayIcon.ContextMenu = _leftClickMenu;
+                _trayShowContextMenuInvoker = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
             }
 
-            MethodInfo mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-            mi.Invoke(_trayIcon, null);
+            if (e.Button == MouseButtons.Right)
+            {   // right-click will show immediately the Context Menu
+                _trayIcon.ContextMenu = _rightClickMenu;
+                _trayShowContextMenuInvoker?.Invoke(_trayIcon, null);
+            }
+            else if (e.Button == MouseButtons.Left)
+            {   // left-click should wait a bit, since we use the left double-click to show/hide the CPU chart
+
+                if (_singleClickTimer != null)
+                {   // this is probably a double-click; the timer will be dismissed in the double click event handler
+                    return;
+                }
+                _trayIcon.ContextMenu = _leftClickMenu;
+                _singleClickTimer = new Timer { Interval = 350 };
+                _singleClickTimer.Tick += (o, te) => {
+                    _singleClickTimer.Stop();
+                    if (_singleClickTimer.Tag == null)
+                    {   // no double-click in the mentime, so let's show the Shortcuts menu
+                        _trayShowContextMenuInvoker?.Invoke(_trayIcon, null);
+                    }
+                    _singleClickTimer = null;
+                };
+                _singleClickTimer.Start();
+            }
         }
 
         protected override void OnLoad(EventArgs e)

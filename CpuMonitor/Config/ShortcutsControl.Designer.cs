@@ -279,7 +279,7 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_chName
             // 
-            this.w_chName.Text = "Shortcut";
+            this.w_chName.Text = "Shortcuts";
             this.w_chName.Width = 119;
             // 
             // w_errorProvider

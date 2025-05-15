@@ -61,12 +61,12 @@ namespace HumbleCpuMonitor.Config
             this.label14 = new System.Windows.Forms.Label();
             this.w_tab = new System.Windows.Forms.TabControl();
             this.w_tabPageMain = new System.Windows.Forms.TabPage();
-            this.w_tabPageShortcuts = new System.Windows.Forms.TabPage();
-            this.label15 = new System.Windows.Forms.Label();
-            this.w_cbMainChartTopmost = new System.Windows.Forms.CheckBox();
-            this.w_cbTopProcessesTopmost = new System.Windows.Forms.CheckBox();
             this.w_cbMachineInfoTopmost = new System.Windows.Forms.CheckBox();
             this.w_cbProcessChartTopmost = new System.Windows.Forms.CheckBox();
+            this.w_cbTopProcessesTopmost = new System.Windows.Forms.CheckBox();
+            this.w_cbMainChartTopmost = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.w_tabPageShortcuts = new System.Windows.Forms.TabPage();
             this.w_tab.SuspendLayout();
             this.w_tabPageMain.SuspendLayout();
             this.SuspendLayout();
@@ -89,14 +89,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl1
             // 
-            this.w_pnl1.Location = new System.Drawing.Point(70, 51);
+            this.w_pnl1.Location = new System.Drawing.Point(70, 56);
             this.w_pnl1.Name = "w_pnl1";
             this.w_pnl1.Size = new System.Drawing.Size(25, 25);
             this.w_pnl1.TabIndex = 3;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(5, 51);
+            this.label1.Location = new System.Drawing.Point(3, 56);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 25);
             this.label1.TabIndex = 2;
@@ -121,14 +121,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl3
             // 
-            this.w_pnl3.Location = new System.Drawing.Point(70, 103);
+            this.w_pnl3.Location = new System.Drawing.Point(70, 117);
             this.w_pnl3.Name = "w_pnl3";
             this.w_pnl3.Size = new System.Drawing.Size(25, 25);
             this.w_pnl3.TabIndex = 5;
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(5, 103);
+            this.label3.Location = new System.Drawing.Point(5, 117);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 25);
             this.label3.TabIndex = 4;
@@ -137,14 +137,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl7
             // 
-            this.w_pnl7.Location = new System.Drawing.Point(177, 78);
+            this.w_pnl7.Location = new System.Drawing.Point(177, 86);
             this.w_pnl7.Name = "w_pnl7";
             this.w_pnl7.Size = new System.Drawing.Size(25, 25);
             this.w_pnl7.TabIndex = 11;
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(112, 78);
+            this.label4.Location = new System.Drawing.Point(112, 86);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(59, 25);
             this.label4.TabIndex = 10;
@@ -153,14 +153,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl6
             // 
-            this.w_pnl6.Location = new System.Drawing.Point(177, 51);
+            this.w_pnl6.Location = new System.Drawing.Point(177, 55);
             this.w_pnl6.Name = "w_pnl6";
             this.w_pnl6.Size = new System.Drawing.Size(25, 25);
             this.w_pnl6.TabIndex = 9;
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(112, 51);
+            this.label5.Location = new System.Drawing.Point(112, 56);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 25);
             this.label5.TabIndex = 8;
@@ -169,14 +169,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl2
             // 
-            this.w_pnl2.Location = new System.Drawing.Point(70, 77);
+            this.w_pnl2.Location = new System.Drawing.Point(70, 86);
             this.w_pnl2.Name = "w_pnl2";
             this.w_pnl2.Size = new System.Drawing.Size(25, 25);
             this.w_pnl2.TabIndex = 13;
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(5, 77);
+            this.label6.Location = new System.Drawing.Point(5, 86);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 25);
             this.label6.TabIndex = 12;
@@ -185,14 +185,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl4
             // 
-            this.w_pnl4.Location = new System.Drawing.Point(70, 129);
+            this.w_pnl4.Location = new System.Drawing.Point(70, 148);
             this.w_pnl4.Name = "w_pnl4";
             this.w_pnl4.Size = new System.Drawing.Size(25, 25);
             this.w_pnl4.TabIndex = 15;
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(5, 129);
+            this.label7.Location = new System.Drawing.Point(6, 148);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(59, 25);
             this.label7.TabIndex = 14;
@@ -201,14 +201,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl9
             // 
-            this.w_pnl9.Location = new System.Drawing.Point(177, 132);
+            this.w_pnl9.Location = new System.Drawing.Point(177, 148);
             this.w_pnl9.Name = "w_pnl9";
             this.w_pnl9.Size = new System.Drawing.Size(25, 25);
             this.w_pnl9.TabIndex = 19;
             // 
             // label8
             // 
-            this.label8.Location = new System.Drawing.Point(112, 132);
+            this.label8.Location = new System.Drawing.Point(112, 148);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(59, 25);
             this.label8.TabIndex = 18;
@@ -217,14 +217,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnl8
             // 
-            this.w_pnl8.Location = new System.Drawing.Point(177, 105);
+            this.w_pnl8.Location = new System.Drawing.Point(177, 117);
             this.w_pnl8.Name = "w_pnl8";
             this.w_pnl8.Size = new System.Drawing.Size(25, 25);
             this.w_pnl8.TabIndex = 17;
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(112, 105);
+            this.label9.Location = new System.Drawing.Point(112, 117);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(59, 25);
             this.label9.TabIndex = 16;
@@ -234,7 +234,7 @@ namespace HumbleCpuMonitor.Config
             // w_btnOK
             // 
             this.w_btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_btnOK.Location = new System.Drawing.Point(447, 201);
+            this.w_btnOK.Location = new System.Drawing.Point(447, 241);
             this.w_btnOK.Margin = new System.Windows.Forms.Padding(1);
             this.w_btnOK.Name = "w_btnOK";
             this.w_btnOK.Size = new System.Drawing.Size(75, 23);
@@ -281,14 +281,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnlBackground
             // 
-            this.w_pnlBackground.Location = new System.Drawing.Point(304, 52);
+            this.w_pnlBackground.Location = new System.Drawing.Point(304, 56);
             this.w_pnlBackground.Name = "w_pnlBackground";
             this.w_pnlBackground.Size = new System.Drawing.Size(25, 25);
             this.w_pnlBackground.TabIndex = 26;
             // 
             // label13
             // 
-            this.label13.Location = new System.Drawing.Point(232, 52);
+            this.label13.Location = new System.Drawing.Point(232, 55);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(66, 25);
             this.label13.TabIndex = 25;
@@ -297,14 +297,14 @@ namespace HumbleCpuMonitor.Config
             // 
             // w_pnlChartLines
             // 
-            this.w_pnlChartLines.Location = new System.Drawing.Point(304, 79);
+            this.w_pnlChartLines.Location = new System.Drawing.Point(304, 86);
             this.w_pnlChartLines.Name = "w_pnlChartLines";
             this.w_pnlChartLines.Size = new System.Drawing.Size(25, 25);
             this.w_pnlChartLines.TabIndex = 28;
             // 
             // label14
             // 
-            this.label14.Location = new System.Drawing.Point(232, 79);
+            this.label14.Location = new System.Drawing.Point(232, 86);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(66, 25);
             this.label14.TabIndex = 27;
@@ -320,7 +320,7 @@ namespace HumbleCpuMonitor.Config
             this.w_tab.Name = "w_tab";
             this.w_tab.Padding = new System.Drawing.Point(4, 4);
             this.w_tab.SelectedIndex = 0;
-            this.w_tab.Size = new System.Drawing.Size(519, 198);
+            this.w_tab.Size = new System.Drawing.Size(519, 234);
             this.w_tab.TabIndex = 29;
             // 
             // w_tabPageMain
@@ -361,50 +361,10 @@ namespace HumbleCpuMonitor.Config
             this.w_tabPageMain.Location = new System.Drawing.Point(4, 24);
             this.w_tabPageMain.Name = "w_tabPageMain";
             this.w_tabPageMain.Padding = new System.Windows.Forms.Padding(3);
-            this.w_tabPageMain.Size = new System.Drawing.Size(511, 170);
+            this.w_tabPageMain.Size = new System.Drawing.Size(511, 206);
             this.w_tabPageMain.TabIndex = 0;
             this.w_tabPageMain.Text = "Main";
             this.w_tabPageMain.UseVisualStyleBackColor = true;
-            // 
-            // w_tabPageShortcuts
-            // 
-            this.w_tabPageShortcuts.Location = new System.Drawing.Point(4, 24);
-            this.w_tabPageShortcuts.Name = "w_tabPageShortcuts";
-            this.w_tabPageShortcuts.Padding = new System.Windows.Forms.Padding(3);
-            this.w_tabPageShortcuts.Size = new System.Drawing.Size(511, 170);
-            this.w_tabPageShortcuts.TabIndex = 1;
-            this.w_tabPageShortcuts.Text = "Shortcuts";
-            this.w_tabPageShortcuts.UseVisualStyleBackColor = true;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(370, 3);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(55, 13);
-            this.label15.TabIndex = 29;
-            this.label15.Text = "Topmost";
-            // 
-            // w_cbMainChartTopmost
-            // 
-            this.w_cbMainChartTopmost.AutoSize = true;
-            this.w_cbMainChartTopmost.Location = new System.Drawing.Point(373, 25);
-            this.w_cbMainChartTopmost.Name = "w_cbMainChartTopmost";
-            this.w_cbMainChartTopmost.Size = new System.Drawing.Size(76, 17);
-            this.w_cbMainChartTopmost.TabIndex = 30;
-            this.w_cbMainChartTopmost.Text = "Main chart";
-            this.w_cbMainChartTopmost.UseVisualStyleBackColor = true;
-            // 
-            // w_cbTopProcessesTopmost
-            // 
-            this.w_cbTopProcessesTopmost.AutoSize = true;
-            this.w_cbTopProcessesTopmost.Location = new System.Drawing.Point(373, 69);
-            this.w_cbTopProcessesTopmost.Name = "w_cbTopProcessesTopmost";
-            this.w_cbTopProcessesTopmost.Size = new System.Drawing.Size(96, 17);
-            this.w_cbTopProcessesTopmost.TabIndex = 31;
-            this.w_cbTopProcessesTopmost.Text = "Top processes";
-            this.w_cbTopProcessesTopmost.UseVisualStyleBackColor = true;
             // 
             // w_cbMachineInfoTopmost
             // 
@@ -426,11 +386,51 @@ namespace HumbleCpuMonitor.Config
             this.w_cbProcessChartTopmost.Text = "Process chart";
             this.w_cbProcessChartTopmost.UseVisualStyleBackColor = true;
             // 
+            // w_cbTopProcessesTopmost
+            // 
+            this.w_cbTopProcessesTopmost.AutoSize = true;
+            this.w_cbTopProcessesTopmost.Location = new System.Drawing.Point(373, 69);
+            this.w_cbTopProcessesTopmost.Name = "w_cbTopProcessesTopmost";
+            this.w_cbTopProcessesTopmost.Size = new System.Drawing.Size(96, 17);
+            this.w_cbTopProcessesTopmost.TabIndex = 31;
+            this.w_cbTopProcessesTopmost.Text = "Top processes";
+            this.w_cbTopProcessesTopmost.UseVisualStyleBackColor = true;
+            // 
+            // w_cbMainChartTopmost
+            // 
+            this.w_cbMainChartTopmost.AutoSize = true;
+            this.w_cbMainChartTopmost.Location = new System.Drawing.Point(373, 25);
+            this.w_cbMainChartTopmost.Name = "w_cbMainChartTopmost";
+            this.w_cbMainChartTopmost.Size = new System.Drawing.Size(76, 17);
+            this.w_cbMainChartTopmost.TabIndex = 30;
+            this.w_cbMainChartTopmost.Text = "Main chart";
+            this.w_cbMainChartTopmost.UseVisualStyleBackColor = true;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(370, 3);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(55, 13);
+            this.label15.TabIndex = 29;
+            this.label15.Text = "Topmost";
+            // 
+            // w_tabPageShortcuts
+            // 
+            this.w_tabPageShortcuts.Location = new System.Drawing.Point(4, 24);
+            this.w_tabPageShortcuts.Name = "w_tabPageShortcuts";
+            this.w_tabPageShortcuts.Padding = new System.Windows.Forms.Padding(3);
+            this.w_tabPageShortcuts.Size = new System.Drawing.Size(511, 170);
+            this.w_tabPageShortcuts.TabIndex = 1;
+            this.w_tabPageShortcuts.Text = "Shortcuts";
+            this.w_tabPageShortcuts.UseVisualStyleBackColor = true;
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(527, 229);
+            this.ClientSize = new System.Drawing.Size(527, 269);
             this.Controls.Add(this.w_tab);
             this.Controls.Add(this.w_btnOK);
             this.DoubleBuffered = true;

@@ -7,7 +7,6 @@ namespace HumbleCpuMonitor.Config
     internal class ShortcutManager
     {
         private const string LauncherFilename = "HcmLauncher.xml";
-
         private LauncherConfig _launcherConfig;
         private List<MenuItem> _allMenuItems;
 

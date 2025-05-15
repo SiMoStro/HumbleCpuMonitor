@@ -14,6 +14,7 @@ namespace HumbleCpuMonitor.Config
         private ShortcutsControl _shortcuts;
 
         internal static event EventHandler ConfigurationFormClosed;
+        internal static event EventHandler ShortcutsUpdated;
 
         public ConfigurationForm()
         {
@@ -32,6 +33,7 @@ namespace HumbleCpuMonitor.Config
         private void HandleShortcutApply(object sender, EventArgs e)
         {
             ShortcutManager.Instance.UpdateShortcuts(_shortcuts.Items);
+            ShortcutsUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public void Initialize()

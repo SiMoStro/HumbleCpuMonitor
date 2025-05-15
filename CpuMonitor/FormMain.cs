@@ -27,7 +27,8 @@ namespace HumbleCpuMonitor
         private int _cpuIconIndex;
         private ChartType _chartMode;
 
-        private ContextMenu _menu;
+        private ContextMenu _rightClickMenu;
+        private ContextMenu _leftClickMenu;
         private MenuItem _miExitMenu;
         private MenuItem _miToggleShowHideMenu;
         private MenuItem _miToggleSingleCpuMenu;
@@ -39,7 +40,6 @@ namespace HumbleCpuMonitor
         private MenuItem _miMachineInfo;
         private MenuItem _miTopProcsInfo;
         private MenuItem _configMenu;
-        private MenuItem _shortcutMenu;
 
         private MenuItem _miUseBarChart;
         private MenuItem _miUseLineChart;
@@ -119,19 +119,36 @@ namespace HumbleCpuMonitor
 
             _theCPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             _trayIcon = new NotifyIcon();
+            _trayIcon.MouseDown += HandleMouseDown;
             _trayIcon.DoubleClick += (o, e) => ToggleWindowVisibility();
 
             LoadIcons();
-            BuildMenu();
+            BuildContextMenu();
             UpdateTrayIcon();
 
             _totalCpuMode = true;
             SwitchChartMode(ScenarioManager.Instance.Configuration.ChartType);
 
             ConfigurationForm.ConfigurationFormClosed += HandleConfigurationFormClosed;
+            ConfigurationForm.ShortcutsUpdated += HandleShortcutsUpdated;
 
             _timer.Tick += HandleTick;
             _timer.Start();
+        }
+
+        private void HandleMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                _trayIcon.ContextMenu = _rightClickMenu;
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
+                _trayIcon.ContextMenu = _leftClickMenu;
+            }
+
+            MethodInfo mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
+            mi.Invoke(_trayIcon, null);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -264,9 +281,10 @@ namespace HumbleCpuMonitor
             return icon;
         }
 
-        private void BuildMenu()
+        private void BuildContextMenu()
         {
-            _menu = new ContextMenu();
+            _rightClickMenu = new ContextMenu();
+            _leftClickMenu = new ContextMenu();
 
             _miExitMenu = new MenuItem("Exit");
             _miExitMenu.Click += (o, e) =>
@@ -385,38 +403,41 @@ namespace HumbleCpuMonitor
                 ConfigurationForm.ShowConfig();
             };
 
-            _shortcutMenu = new MenuItem("Shortcut");
-
             upd.MenuItems.Add(_miUpdInsane);
             upd.MenuItems.Add(_miUpdHalfSecond);
             upd.MenuItems.Add(_miUpdOneSecond);
             upd.MenuItems.Add(_miUpdTwoSeconds);
             upd.MenuItems.Add(_miUpdThreeSeconds);
 
-            _menu.MenuItems.Add(_miToggleShowHideMenu);
-            _menu.MenuItems.Add(upd);
-            _menu.MenuItems.Add(cType);
-            _menu.MenuItems.Add(_miToggleSingleCpuMenu);
-            _menu.MenuItems.Add(_selectProcess);
-            _menu.MenuItems.Add(_miTopProcsInfo);
-            _menu.MenuItems.Add(_miMachineInfo);
-            _menu.MenuItems.Add(_configMenu);
-            _menu.MenuItems.Add(_shortcutMenu);
-            _menu.MenuItems.Add(new MenuItem("-"));
-            _menu.MenuItems.Add(_miExitMenu);
+            _rightClickMenu.MenuItems.Add(_miToggleShowHideMenu);
+            _rightClickMenu.MenuItems.Add(upd);
+            _rightClickMenu.MenuItems.Add(cType);
+            _rightClickMenu.MenuItems.Add(_miToggleSingleCpuMenu);
+            _rightClickMenu.MenuItems.Add(_selectProcess);
+            _rightClickMenu.MenuItems.Add(_miTopProcsInfo);
+            _rightClickMenu.MenuItems.Add(_miMachineInfo);
+            _rightClickMenu.MenuItems.Add(_configMenu);
+            _rightClickMenu.MenuItems.Add(new MenuItem("-"));
+            _rightClickMenu.MenuItems.Add(_miExitMenu);
 
-            _menu.Popup += (o, e) =>
+            _rightClickMenu.Popup += (o, e) =>
             {
                 _miToggleShowHideMenu.Text = Visible ? "Hide CPU chart" : "Show CPU chart";
                 _miToggleSingleCpuMenu.Text = _totalCpuMode ? "Show separate CPUs" : "Show Total CPU usage";
                 _selectProcess.Enabled = (_processSelector == null);
-
-                _shortcutMenu.MenuItems.Clear();
-                MenuItem[] mi = ShortcutManager.Instance.RootMenuItems;
-                _shortcutMenu.MenuItems.AddRange(mi);
-                _shortcutMenu.Visible = mi.Length > 0;
             };
-            _trayIcon.ContextMenu = _menu;
+
+            BuildLeftClickMenu();
+        }
+
+        private void BuildLeftClickMenu()
+        {
+            _leftClickMenu.MenuItems.Clear();
+            MenuItem[] rcm = ShortcutManager.Instance.RootMenuItems;
+            if (rcm.Length > 0)
+            {
+                foreach (var mi in rcm) _leftClickMenu.MenuItems.Add(mi);
+            }
         }
 
         private void HandleUpdateIntervalChange(object sender, EventArgs e)
@@ -474,6 +495,11 @@ namespace HumbleCpuMonitor
                 chart?.UpdateColors();
             }
             TopMost = ScenarioManager.Instance.Configuration.MainChartTopmost;
+        }
+
+        private void HandleShortcutsUpdated(object sender, EventArgs e)
+        {
+            BuildLeftClickMenu();
         }
 
         private void ToggleWindowVisibility()

@@ -8,12 +8,24 @@ namespace HumbleCpuMonitor.Config
 {
     public partial class ConfigurationForm : Form
     {
+        #region [private]
+
         private List<Panel> _valueColorPanels = new List<Panel>();
         private List<Panel> _allPanels = new List<Panel>();
         private static ConfigurationForm _instance;
         private ShortcutsControl _shortcuts;
+        private static Point? _lastLocation;
 
+        #endregion
+
+        /// <summary>
+        /// The configuration form has closed
+        /// </summary>
         internal static event EventHandler ConfigurationFormClosed;
+        
+        /// <summary>
+        /// The shortcuts definitions have changed
+        /// </summary>
         internal static event EventHandler ShortcutsUpdated;
 
         public ConfigurationForm()
@@ -59,6 +71,15 @@ namespace HumbleCpuMonitor.Config
             foreach (Panel p in _allPanels) p.Click += HandlePanelClick;
         }
 
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            if(_lastLocation.HasValue)
+            {
+                Location = _lastLocation.Value;
+            }
+        }
+
         private void HandlePanelClick(object sender, EventArgs e)
         {
             Panel pnl = (Panel)sender;
@@ -79,6 +100,7 @@ namespace HumbleCpuMonitor.Config
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
+            _lastLocation = new Point(Location.X, Location.Y);
             _shortcuts.Apply -= HandleShortcutApply;
             List<Color> newColors = new List<Color>();
             foreach (Panel p in _valueColorPanels) newColors.Add(p.BackColor);

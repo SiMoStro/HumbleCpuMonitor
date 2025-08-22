@@ -657,20 +657,26 @@ namespace HumbleCpuMonitor
 
         private void HandleSplittedChartsDoubleClick(object sender, EventArgs e)
         {
-            foreach (MiniBarChart chart in _miniChartCpuId) chart.Restart();
+            HandlDoubleclick(_miniChartCpuId.ToList(), ModifierKeys.HasFlag(Keys.Control));
         }
 
         private void HandleMiniChartDoubleClick(object sender, EventArgs e)
         {
-            if (ModifierKeys.HasFlag(Keys.Control))
+            HandlDoubleclick(new List<MiniChartBase> { _miniChart }, ModifierKeys.HasFlag(Keys.Control));
+        }
+
+        private void HandlDoubleclick(List<MiniChartBase> charts, bool controlPressed = false)
+        {
+            if(controlPressed)
             {
                 SwitchBorderMode();
             }
             else
             {
-                _miniChart.Restart();
+                foreach (var chart in charts) chart.Restart();
             }
         }
+
 
         private void SwitchBorderMode(bool forceBorderless = false)
         {

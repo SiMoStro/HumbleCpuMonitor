@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -40,9 +41,16 @@ namespace HumbleCpuMonitor.Config
             {
                 tb.LostFocus += HandleTextBoxLostFocus;
             }
-            
+
             w_btnRemoveItem.Enabled = false;
             EnableTextWidgets(false);
+            HandleCreated += WindowHandleCreated;
+        }
+
+        private void WindowHandleCreated(object sender, EventArgs e)
+        {
+            if (w_lvItems.Items.Count == 0) return;
+            SelectItem(w_lvItems.Items[0]);
         }
 
         private void EnableTextWidgets(bool mode)
@@ -62,7 +70,7 @@ namespace HumbleCpuMonitor.Config
                 if (lvi == null) return;
                 if (lvi.Text != w_tbName.Text) lvi.Text = w_tbName.Text;
             }
-            else if(sender == w_tbWorkDir)
+            else if (sender == w_tbWorkDir)
             {
                 string dir = w_tbWorkDir.Text;
                 if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
@@ -89,9 +97,14 @@ namespace HumbleCpuMonitor.Config
             }
         }
 
+        private void HandleNudValueChanged(object sender, EventArgs e)
+        {
+            _currentItem.LocalIdx = (int)w_nudIdx.Value;
+        }
+
         private ListViewItem FindListViewItem(string id)
         {
-            foreach(ListViewItem lvi in w_lvItems.Items)
+            foreach (ListViewItem lvi in w_lvItems.Items)
             {
                 LauncherItem conf = (LauncherItem)lvi.Tag;
                 if (conf.Id == id) return lvi;
@@ -101,39 +114,32 @@ namespace HumbleCpuMonitor.Config
 
         internal void Initialize(List<LauncherItem> items)
         {
+            w_tbFilter.Text = string.Empty;
             _items.Clear();
             if (items == null) return;
 
-            foreach (var item in items.OrderBy(k => k.Name))
+            foreach (var origItem in items)
             {
-                AddItem(item.Clone());
-            };
-
-            if(w_lvItems.Items.Count > 0)
-            {
-                w_lvItems.Items[0].Selected = true;
+                _items.Add(origItem.Clone());
             }
+
+            RebuildList();
         }
 
-        private void AddItem(LauncherItem item, bool focus = false)
+        private ListViewItem AddItem(LauncherItem item, bool focus = false)
         {
             ListViewItem lvi = new ListViewItem(item.Name)
             {
                 Tag = item
             };
             w_lvItems.Items.Add(lvi);
-            _items.Add(item);
 
             w_btnRemoveItem.Enabled = true;
             if (focus)
             {
-                BeginInvoke(new Action(() =>
-                {
-                    lvi.Selected = true;
-                    lvi.EnsureVisible();
-                }
-                ));                
+                SelectItem(lvi);
             }
+            return lvi;
         }
 
         private void ShowLauncherItem(LauncherItem item)
@@ -141,6 +147,7 @@ namespace HumbleCpuMonitor.Config
             w_tbName.Text = item.Name;
             w_tbDescription.Text = item.Description;
             w_tbFiling.Text = item.Filing;
+            w_nudIdx.Value = item.LocalIdx;
             w_tbExecutable.Text = item.Executable;
             w_tbWorkDir.Text = item.WorkDir;
             w_tbParameters.Text = item.Params;
@@ -155,6 +162,7 @@ namespace HumbleCpuMonitor.Config
             _currentItem.Name = w_tbName.Text;
             _currentItem.Description = w_tbDescription.Text;
             _currentItem.Filing = w_tbFiling.Text;
+            _currentItem.LocalIdx = (int)w_nudIdx.Value;
             _currentItem.Executable = w_tbExecutable.Text;
             _currentItem.WorkDir = w_tbWorkDir.Text;
             _currentItem.Params = w_tbParameters.Text;
@@ -168,6 +176,7 @@ namespace HumbleCpuMonitor.Config
                 Id = Guid.NewGuid().ToString(),
                 Name = GenerateName(),
             };
+            _items.Add(_currentItem);
             ShowLauncherItem(_currentItem);
             AddItem(_currentItem, true);
         }
@@ -201,6 +210,8 @@ namespace HumbleCpuMonitor.Config
             LauncherItem cloned = _currentItem.Clone();
             cloned.Id = Guid.NewGuid().ToString();
             cloned.Name = $"{_currentItem.Name}_cloned";
+            _items.Add(cloned);
+
             AddItem(cloned, true);
         }
 
@@ -234,14 +245,35 @@ namespace HumbleCpuMonitor.Config
             return name;
         }
 
+        private int _autoCounter = 0;
+        private bool _autoCounterEnabled = false;
+
         private void ListViewSelectedIndexChanged(object sender, EventArgs e)
         {
             if (w_lvItems.SelectedItems.Count != 1) return;
-
+            
             ListViewItem lvi = w_lvItems.SelectedItems[0];
-            LauncherItem li = (LauncherItem) lvi.Tag;
-
+            LauncherItem li = (LauncherItem)lvi.Tag;
             _currentItem = li;
+            
+            if((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (!_autoCounterEnabled) _autoCounter = 0;
+                _autoCounterEnabled = true;
+                Debug.WriteLine($"Autocounter ON");
+            }
+            else
+            {
+                _autoCounterEnabled = false;
+                Debug.WriteLine($"Autocounter OFF");
+            }
+
+            if(_autoCounterEnabled)
+            {
+                _currentItem.LocalIdx = _autoCounter;
+                _autoCounter++;
+                Debug.WriteLine($"{li.Name}: {li.LocalIdx}");
+            }
             ShowLauncherItem(_currentItem);
         }
 
@@ -251,7 +283,7 @@ namespace HumbleCpuMonitor.Config
             dlg.Filter = "Executables|*.exe|All files|*.*";
             dlg.DefaultExt = "exe";
             DialogResult res = dlg.ShowDialog();
-            if(res == DialogResult.OK)
+            if (res == DialogResult.OK)
             {
                 w_tbExecutable.Text = dlg.FileName;
             }
@@ -260,7 +292,7 @@ namespace HumbleCpuMonitor.Config
 
         private void CheckBoxAdminCheckedChanged(object sender, EventArgs e)
         {
-            if(_currentItem == null)
+            if (_currentItem == null)
             {
                 return;
             }
@@ -276,6 +308,80 @@ namespace HumbleCpuMonitor.Config
             {
                 w_tbWorkDir.Text = dlg.SelectedPath;
             }
+        }
+
+        private void HandleFilterTextChanged(object sender, EventArgs e)
+        {
+            RebuildList();
+        }
+
+        private void RebuildList()
+        {
+            LauncherItem preSelected = null;
+            if (w_lvItems.SelectedItems.Count > 0)
+            {
+                ListViewItem lvi = w_lvItems.SelectedItems[0];
+                preSelected = (LauncherItem)lvi.Tag;
+            }
+
+            foreach (ListViewItem lvi in w_lvItems.Items) lvi.Tag = null;
+            w_lvItems.Items.Clear();
+            ListViewItem itemToSelect = null;
+            foreach (LauncherItem i in _items)
+            {
+                if (!ShouldAdd(i)) continue;
+                var addedItem = AddItem(i);
+                if (preSelected != null && i.Id == preSelected.Id) itemToSelect = addedItem;
+            }
+
+            if (!IsHandleCreated) return;
+
+            if (itemToSelect == null && w_lvItems.Items.Count > 0)
+            {
+                itemToSelect = w_lvItems.Items[0];
+            }
+
+            SelectItem(itemToSelect);
+        }
+
+        private void SelectItem(ListViewItem lvi)
+        {
+            if (lvi == null) return;
+            BeginInvoke(new Action(() =>
+                    {
+                        lvi.Selected = true;
+                        lvi.EnsureVisible();
+                    }
+                ));
+        }
+
+        private bool ShouldAdd(LauncherItem item)
+        {
+            string filter = w_tbFilter.Text;
+            if (string.IsNullOrEmpty(filter)) return true;
+
+            if (filter.StartsWith("f:"))
+            {
+                filter = filter.Substring(2);
+                if (string.IsNullOrEmpty(filter)) return true;
+                if (string.IsNullOrEmpty(item.Filing)) return false;
+                return (item.Filing.Contains(filter));
+            }
+
+            if (filter.StartsWith("n:"))
+            {
+                filter = filter.Substring(2);
+                if (string.IsNullOrEmpty(filter)) return true;
+                if (string.IsNullOrEmpty(item.Name)) return false;
+                return (item.Name.Contains(filter));
+            }
+
+            bool isInName = !string.IsNullOrEmpty(item.Name) && item.Name.Contains(filter);
+            bool isInDescription = !string.IsNullOrEmpty(item.Description) && item.Description.Contains(filter);
+            bool isInFiling = !string.IsNullOrEmpty(item.Filing) && item.Filing.Contains(filter);
+
+
+            return isInName || isInDescription || isInFiling;
         }
     }
 }

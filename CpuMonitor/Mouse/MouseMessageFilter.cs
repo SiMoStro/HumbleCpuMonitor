@@ -38,6 +38,7 @@ namespace HumbleCpuMonitor
                 _rectMouseDown = null;
                 _globalHook.Stop();
             }
+
             if(MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
             {
                 MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));

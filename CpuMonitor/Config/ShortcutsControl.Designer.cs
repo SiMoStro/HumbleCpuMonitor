@@ -31,6 +31,7 @@ namespace HumbleCpuMonitor.Config
         {
             this.components = new System.ComponentModel.Container();
             this.w_pnlMain = new System.Windows.Forms.Panel();
+            this.w_nudIdx = new System.Windows.Forms.NumericUpDown();
             this.w_btnClone = new System.Windows.Forms.Button();
             this.w_btnDir = new System.Windows.Forms.Button();
             this.w_tbWorkDir = new System.Windows.Forms.TextBox();
@@ -44,6 +45,7 @@ namespace HumbleCpuMonitor.Config
             this.w_tbExecutable = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.w_tbFiling = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.w_tbDescription = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -54,12 +56,20 @@ namespace HumbleCpuMonitor.Config
             this.w_chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.w_toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.w_errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.w_panelLeft = new System.Windows.Forms.Panel();
+            this.w_pnlFilter = new System.Windows.Forms.Panel();
+            this.w_tbFilter = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.w_pnlMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.w_nudIdx)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.w_errorProvider)).BeginInit();
+            this.w_panelLeft.SuspendLayout();
+            this.w_pnlFilter.SuspendLayout();
             this.SuspendLayout();
             // 
             // w_pnlMain
             // 
+            this.w_pnlMain.Controls.Add(this.w_nudIdx);
             this.w_pnlMain.Controls.Add(this.w_btnClone);
             this.w_pnlMain.Controls.Add(this.w_btnDir);
             this.w_pnlMain.Controls.Add(this.w_tbWorkDir);
@@ -73,6 +83,7 @@ namespace HumbleCpuMonitor.Config
             this.w_pnlMain.Controls.Add(this.w_tbExecutable);
             this.w_pnlMain.Controls.Add(this.label4);
             this.w_pnlMain.Controls.Add(this.w_tbFiling);
+            this.w_pnlMain.Controls.Add(this.label7);
             this.w_pnlMain.Controls.Add(this.label3);
             this.w_pnlMain.Controls.Add(this.w_tbDescription);
             this.w_pnlMain.Controls.Add(this.label2);
@@ -82,13 +93,26 @@ namespace HumbleCpuMonitor.Config
             this.w_pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.w_pnlMain.Location = new System.Drawing.Point(137, 0);
             this.w_pnlMain.Name = "w_pnlMain";
-            this.w_pnlMain.Size = new System.Drawing.Size(363, 202);
+            this.w_pnlMain.Size = new System.Drawing.Size(360, 201);
             this.w_pnlMain.TabIndex = 3;
+            // 
+            // w_nudIdx
+            // 
+            this.w_nudIdx.Location = new System.Drawing.Point(305, 65);
+            this.w_nudIdx.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.w_nudIdx.Name = "w_nudIdx";
+            this.w_nudIdx.Size = new System.Drawing.Size(46, 20);
+            this.w_nudIdx.TabIndex = 16;
+            this.w_nudIdx.ValueChanged += new System.EventHandler(this.HandleNudValueChanged);
             // 
             // w_btnClone
             // 
             this.w_btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_btnClone.Location = new System.Drawing.Point(99, 169);
+            this.w_btnClone.Location = new System.Drawing.Point(96, 169);
             this.w_btnClone.Name = "w_btnClone";
             this.w_btnClone.Size = new System.Drawing.Size(78, 23);
             this.w_btnClone.TabIndex = 15;
@@ -147,7 +171,7 @@ namespace HumbleCpuMonitor.Config
             // w_btnAddItem
             // 
             this.w_btnAddItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_btnAddItem.Location = new System.Drawing.Point(11, 169);
+            this.w_btnAddItem.Location = new System.Drawing.Point(8, 169);
             this.w_btnAddItem.Name = "w_btnAddItem";
             this.w_btnAddItem.Size = new System.Drawing.Size(78, 23);
             this.w_btnAddItem.TabIndex = 9;
@@ -158,7 +182,7 @@ namespace HumbleCpuMonitor.Config
             // w_btnRemoveItem
             // 
             this.w_btnRemoveItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_btnRemoveItem.Location = new System.Drawing.Point(187, 169);
+            this.w_btnRemoveItem.Location = new System.Drawing.Point(184, 169);
             this.w_btnRemoveItem.Name = "w_btnRemoveItem";
             this.w_btnRemoveItem.Size = new System.Drawing.Size(78, 23);
             this.w_btnRemoveItem.TabIndex = 10;
@@ -204,9 +228,18 @@ namespace HumbleCpuMonitor.Config
             // 
             this.w_tbFiling.Location = new System.Drawing.Point(75, 65);
             this.w_tbFiling.Name = "w_tbFiling";
-            this.w_tbFiling.Size = new System.Drawing.Size(276, 20);
+            this.w_tbFiling.Size = new System.Drawing.Size(197, 20);
             this.w_tbFiling.TabIndex = 4;
             this.w_toolTip.SetToolTip(this.w_tbFiling, "A list of tokens separated by the \";\" character");
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(278, 68);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(21, 13);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Idx";
             // 
             // label3
             // 
@@ -254,7 +287,7 @@ namespace HumbleCpuMonitor.Config
             // w_btnApply
             // 
             this.w_btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.w_btnApply.Location = new System.Drawing.Point(275, 169);
+            this.w_btnApply.Location = new System.Drawing.Point(272, 169);
             this.w_btnApply.Name = "w_btnApply";
             this.w_btnApply.Size = new System.Drawing.Size(78, 23);
             this.w_btnApply.TabIndex = 11;
@@ -266,12 +299,12 @@ namespace HumbleCpuMonitor.Config
             // 
             this.w_lvItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.w_chName});
-            this.w_lvItems.Dock = System.Windows.Forms.DockStyle.Left;
+            this.w_lvItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.w_lvItems.FullRowSelect = true;
             this.w_lvItems.HideSelection = false;
-            this.w_lvItems.Location = new System.Drawing.Point(0, 0);
+            this.w_lvItems.Location = new System.Drawing.Point(0, 24);
             this.w_lvItems.Name = "w_lvItems";
-            this.w_lvItems.Size = new System.Drawing.Size(137, 202);
+            this.w_lvItems.Size = new System.Drawing.Size(137, 177);
             this.w_lvItems.TabIndex = 2;
             this.w_lvItems.UseCompatibleStateImageBehavior = false;
             this.w_lvItems.View = System.Windows.Forms.View.Details;
@@ -286,17 +319,62 @@ namespace HumbleCpuMonitor.Config
             // 
             this.w_errorProvider.ContainerControl = this;
             // 
+            // w_panelLeft
+            // 
+            this.w_panelLeft.Controls.Add(this.w_lvItems);
+            this.w_panelLeft.Controls.Add(this.w_pnlFilter);
+            this.w_panelLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.w_panelLeft.Location = new System.Drawing.Point(0, 0);
+            this.w_panelLeft.Name = "w_panelLeft";
+            this.w_panelLeft.Size = new System.Drawing.Size(137, 201);
+            this.w_panelLeft.TabIndex = 4;
+            // 
+            // w_pnlFilter
+            // 
+            this.w_pnlFilter.Controls.Add(this.w_tbFilter);
+            this.w_pnlFilter.Controls.Add(this.label8);
+            this.w_pnlFilter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.w_pnlFilter.Location = new System.Drawing.Point(0, 0);
+            this.w_pnlFilter.Name = "w_pnlFilter";
+            this.w_pnlFilter.Size = new System.Drawing.Size(137, 24);
+            this.w_pnlFilter.TabIndex = 0;
+            // 
+            // w_tbFilter
+            // 
+            this.w_tbFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.w_tbFilter.Location = new System.Drawing.Point(38, 1);
+            this.w_tbFilter.Name = "w_tbFilter";
+            this.w_tbFilter.Size = new System.Drawing.Size(96, 20);
+            this.w_tbFilter.TabIndex = 1;
+            this.w_tbFilter.TextChanged += new System.EventHandler(this.HandleFilterTextChanged);
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(3, 3);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(29, 13);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "Filter";
+            // 
             // ShortcutsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.w_pnlMain);
-            this.Controls.Add(this.w_lvItems);
+            this.Controls.Add(this.w_panelLeft);
             this.Name = "ShortcutsControl";
-            this.Size = new System.Drawing.Size(500, 202);
+            this.Size = new System.Drawing.Size(497, 201);
             this.w_pnlMain.ResumeLayout(false);
             this.w_pnlMain.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.w_nudIdx)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.w_errorProvider)).EndInit();
+            this.w_panelLeft.ResumeLayout(false);
+            this.w_pnlFilter.ResumeLayout(false);
+            this.w_pnlFilter.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -327,5 +405,11 @@ namespace HumbleCpuMonitor.Config
         private System.Windows.Forms.Button w_btnClone;
         private System.Windows.Forms.ErrorProvider w_errorProvider;
         private System.Windows.Forms.ColumnHeader w_chName;
+        private System.Windows.Forms.NumericUpDown w_nudIdx;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Panel w_panelLeft;
+        private System.Windows.Forms.Panel w_pnlFilter;
+        private System.Windows.Forms.TextBox w_tbFilter;
+        private System.Windows.Forms.Label label8;
     }
 }

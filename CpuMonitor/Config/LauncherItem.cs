@@ -27,6 +27,11 @@ namespace HumbleCpuMonitor.Config
         public string Filing { get; set; }
 
         /// <summary>
+        /// An optional ordering index
+        /// </summary>
+        public int LocalIdx { get; set; }
+
+        /// <summary>
         /// Executable (full path)
         /// </summary>
         public string Executable { get; set; }
@@ -54,6 +59,7 @@ namespace HumbleCpuMonitor.Config
                 Name = Name,
                 Description = Description,
                 Filing = Filing,
+                LocalIdx = LocalIdx,
                 Executable = Executable,
                 WorkDir = WorkDir,
                 Params = Params,

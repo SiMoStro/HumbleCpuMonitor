@@ -1,4 +1,7 @@
-﻿using System;
+﻿using HumbleCpuMonitor.Interfaces;
+using HumbleCpuMonitor.Win32;
+using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -13,17 +16,17 @@ namespace HumbleCpuMonitor
         // private const int WM_LBUTTONUP = 0x202;
         private const int WM_LBUTTONDBLCLK = 0x0203;
 
-        private IntPtr _winHandle;
         private RECT? _rectMouseDown;
         private Point _mouseDown;
+        private IWinInfo _iwi;
 
         private GlobalMouseHook _globalHook;
 
         public Action LeftButtonDoubleClick { get; set; }
 
-        public MouseMessageFilter(IntPtr handle)
+        public MouseMessageFilter(IWinInfo winInfo)
         {
-            _winHandle = handle;
+            _iwi = winInfo;
             _globalHook = new GlobalMouseHook
             {
                 ExtHook = GlobalMouseMove
@@ -39,29 +42,30 @@ namespace HumbleCpuMonitor
                 _globalHook.Stop();
             }
 
-            if(MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
+            if (MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
             {
                 MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
                 var dx = _mouseDown.X - hookStruct.pt.x;
                 var dy = _mouseDown.Y - hookStruct.pt.y;
-                SetWindowPos(_winHandle, IntPtr.Zero, _rectMouseDown.Value.Left - dx, _rectMouseDown.Value.Top - dy, 0, 0, SetWindowPosFlags.IgnoreResize | SetWindowPosFlags.DoNotChangeOwnerZOrder);
+                SetWindowPos(_iwi.Handle, IntPtr.Zero, _rectMouseDown.Value.Left - dx, _rectMouseDown.Value.Top - dy, 0, 0, SetWindowPosFlags.IgnoreResize | SetWindowPosFlags.DoNotChangeOwnerZOrder);
             }
         }
 
         public bool PreFilterMessage(ref Message m)
         {
-            if (_winHandle == IntPtr.Zero) return false;
+            if (_iwi.Handle == IntPtr.Zero) return false;
 
             IntPtr parent = GetAncestor(m.HWnd, GetAncestorFlags.GetRoot);
             if (parent == IntPtr.Zero) return false;
-            if (parent != _winHandle) return false;
+            if (parent != _iwi.Handle) return false;
 
             if (m.Msg == WM_LBUTTONDOWN)
             {
                 RECT r;
-                GetWindowRect(_winHandle, out r);
+                GetWindowRect(_iwi.Handle, out r);
                 _rectMouseDown = r;
-                _mouseDown = Cursor.Position;
+                GetCursorPos(out POINT mPos);
+                _mouseDown = new Point(mPos.x, mPos.y);
                 _globalHook.Start();
             }
             else if (m.Msg == WM_LBUTTONDBLCLK)
@@ -71,5 +75,5 @@ namespace HumbleCpuMonitor
 
             return false;
         }
-    }    
+    }
 }

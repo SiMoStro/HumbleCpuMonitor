@@ -3,31 +3,38 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing;
 using HumbleCpuMonitor.Config;
+using HumbleCpuMonitor.Interfaces;
 
 namespace HumbleCpuMonitor
 {
-    public partial class TopCpuProcesses : Form
+    public partial class TopCpuProcesses : Form, IWinInfo
     {
         #region [private] Objects and vars
 
-        private Label[] _cpu;
-        private Label[] _procs;
-        private Timer _timer;
+        private readonly Label[] _cpu;
+        private readonly Label[] _procs;
+        private readonly Timer _timer;
         private bool _isLight;
-        private MouseMessageFilter _mouseHandler;
+        private readonly MouseMessageFilter _mouseHandler;
 
         #endregion
+
+        public float DpiX { get; private set; }
+
+        public float DpiY { get; private set; }
 
         public TopCpuProcesses()
         {
             InitializeComponent();
 
-            _mouseHandler = new MouseMessageFilter(Handle);
-            _mouseHandler.LeftButtonDoubleClick = new Action(() =>
+            _mouseHandler = new MouseMessageFilter(this)
             {
-                _isLight = !_isLight;
-                SetColors();
-            });
+                LeftButtonDoubleClick = new Action(() =>
+                {
+                    _isLight = !_isLight;
+                    SetColors();
+                })
+            };
             Application.AddMessageFilter(_mouseHandler);
 
             _cpu = new Label[]
@@ -59,6 +66,15 @@ namespace HumbleCpuMonitor
             ConfigurationForm.ConfigurationFormClosed += HandleConfigurationFormClosed;
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            Graphics g = CreateGraphics();
+            DpiX = g.DpiX;
+            DpiY = g.DpiY;
+            g.Dispose();
+        }
         private void HandleConfigurationFormClosed(object sender, EventArgs e)
         {
             AlignPropertiesToConfig();
@@ -99,6 +115,7 @@ namespace HumbleCpuMonitor
 
         internal void SaveLocation()
         {
+            ScenarioManager.Instance.Configuration.TopProcsInfoVisible = Visible;
             if (!Visible) return;
             ScenarioManager.Instance.Configuration.TopProcsInfoX = Location.X;
             ScenarioManager.Instance.Configuration.TopProcsInfoY = Location.Y;

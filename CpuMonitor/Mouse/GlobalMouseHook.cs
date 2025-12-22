@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HumbleCpuMonitor.Win32;
+using System;
 using System.Diagnostics;
 using static HumbleCpuMonitor.Win32.User32;
 
@@ -28,7 +29,7 @@ namespace HumbleCpuMonitor
             {
                 using (ProcessModule curModule = curProcess.MainModule)
                 {
-                    return SetWindowsHookEx(WH_MOUSE_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
+                    return SetWindowsHookEx(WH_MOUSE_LL, proc, Kernel32.GetModuleHandle(curModule.ModuleName), 0);
                 }
             }
         }

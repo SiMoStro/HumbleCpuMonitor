@@ -97,7 +97,7 @@ namespace HumbleCpuMonitor.Config
             }
             catch (Exception e)
             {
-
+                Console.WriteLine($"Start error {e.Message}");
             }
 
         }

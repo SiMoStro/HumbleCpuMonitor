@@ -145,6 +145,11 @@ namespace HumbleCpuMonitor.Config
         public int? MachineInfoY { get; set; }
 
         /// <summary>
+        /// True to show the Machine info panel
+        /// </summary>
+        public bool MachineInfoVisible { get; set; }
+
+        /// <summary>
         /// Top Processes Info panel X position
         /// </summary>
         public int? TopProcsInfoX { get; set; }
@@ -153,6 +158,11 @@ namespace HumbleCpuMonitor.Config
         /// Top Processes Info panel Y position
         /// </summary>
         public int? TopProcsInfoY { get; set; }
+
+        /// <summary>
+        /// True to show the Process Info panel
+        /// </summary>
+        public bool TopProcsInfoVisible { get; set; }
 
         /// <summary>
         /// Main chart topmost property
@@ -341,8 +351,10 @@ namespace HumbleCpuMonitor.Config
             MainWinY = cd.MainWinY;
             MachineInfoX = cd.MachineInfoX;
             MachineInfoY = cd.MachineInfoY;
+            MachineInfoVisible = cd.MachineInfoVisible;
             TopProcsInfoX = cd.TopProcsInfoX;
             TopProcsInfoY = cd.TopProcsInfoY;
+            TopProcsInfoVisible = cd.TopProcsInfoVisible;
             MainWinHeight = cd.MainWinHeight;
             MainWinWidth = cd.MainWinWidth;
             MainWinCaptionLess = cd.MainWinCaptionLess;

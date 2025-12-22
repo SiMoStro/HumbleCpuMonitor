@@ -10,19 +10,20 @@ using HumbleCpuMonitor.Charts;
 using HumbleCpuMonitor.Process;
 using HumbleCpuMonitor.Config;
 using System.Collections.Generic;
+using HumbleCpuMonitor.Interfaces;
 
 namespace HumbleCpuMonitor
 {
-    internal partial class FormMain : Form
+    internal partial class FormMain : Form, IWinInfo
     {
         #region [private]
 
-        private NotifyIcon _trayIcon;
-        private PerformanceCounter _theCPUCounter;
-        private PerformanceCounter[] _cpuIdCounter;
+        private readonly NotifyIcon _trayIcon;
+        private readonly PerformanceCounter _theCPUCounter;
+        private readonly PerformanceCounter[] _cpuIdCounter;
         private bool _allowsHowDisplay = false;
-        private Icon[] _icons;
-        private int _iconSelectionStep;
+        private readonly Icon[] _icons;
+        private readonly int _iconSelectionStep;
         private float _cpuUsage;
         private int _cpuIconIndex;
         private ChartType _chartMode;
@@ -46,29 +47,30 @@ namespace HumbleCpuMonitor
         private MenuItem _miUseBarChart;
         private MenuItem _miUseLineChart;
         private MenuItem _miUseScatterChart;
+        private MenuItem _miUsePixelChart;
         private MenuItem _miUseFullColorChart;
 
-        private List<MenuItem> _updateIntervalMenuItem = new List<MenuItem>();
+        private readonly List<MenuItem> _updateIntervalMenuItem = new List<MenuItem>();
 
         private ProcessSelector _processSelector;
 
         private MenuItem _selectProcess;
 
-        private int _processors;
+        private readonly int _processors;
 
         private MiniChartBase _miniChart;
         private Panel _miniChartPanel;
         private MiniChartBase[] _miniChartCpuId;
         private bool _internalExit;
-        private Timer _timer;
+        private readonly Timer _timer;
         private bool _totalCpuMode;
-        private string _title = "Humble CPU Monitor";
+        private readonly string _title = "Humble CPU Monitor";
         private long _cycles;
 
         private TableLayoutPanel _multiCpuPanel;
 
-        private Processes _processes;
-        private System.Diagnostics.Process _self;
+        private readonly Processes _processes;
+        private readonly System.Diagnostics.Process _self;
 
         private MachineInfo _machineInfo;
         private TopCpuProcesses _topProcs;
@@ -92,8 +94,12 @@ namespace HumbleCpuMonitor
             get; private set;
         }
 
+        public float DpiX { get; private set; }
+
+        public float DpiY { get; private set; }
+
         public FormMain()
-        {
+        {            
             InitializeComponent();
 
             ScenarioManager.Instance.Initialize();
@@ -186,6 +192,12 @@ namespace HumbleCpuMonitor
         {
             base.OnLoad(e);
             RestoreConfigData();
+
+            Graphics g = CreateGraphics();
+            DpiX = g.DpiX;
+            DpiY = g.DpiY;
+            g.Dispose();
+
         }
 
         #region Configuration: save and restore
@@ -264,6 +276,14 @@ namespace HumbleCpuMonitor
                     for (int p = 0; p < _processors; p++)
                     {
                         _miniChartCpuId[p] = new MiniFullColor();
+                    }
+                    break;
+                case ChartType.Pixel:
+                    _miniChart = new MiniPixelChart { HorizontalLines = 9 };
+                    _miniChartCpuId = new MiniPixelChart[_processors];
+                    for (int p = 0; p < _processors; p++)
+                    {
+                        _miniChartCpuId[p] = new MiniPixelChart();
                     }
                     break;
             }
@@ -365,11 +385,14 @@ namespace HumbleCpuMonitor
             _miUseLineChart.Click += (o, e) => SwitchChartMode(ChartType.Line);
             _miUseScatterChart = new MenuItem("Scatter chart");
             _miUseScatterChart.Click += (o, e) => SwitchChartMode(ChartType.Scatter);
+            _miUsePixelChart = new MenuItem("Pixel chart");
+            _miUsePixelChart.Click += (o, e) => SwitchChartMode(ChartType.Pixel);
             _miUseFullColorChart = new MenuItem("FullColor chart");
             _miUseFullColorChart.Click += (o, e) => SwitchChartMode(ChartType.FullColor);
             cType.MenuItems.Add(_miUseBarChart);
             cType.MenuItems.Add(_miUseLineChart);
             cType.MenuItems.Add(_miUseScatterChart);
+            cType.MenuItems.Add(_miUsePixelChart);
             cType.MenuItems.Add(_miUseFullColorChart);
 
             _miToggleSingleCpuMenu = new MenuItem();
@@ -705,7 +728,7 @@ namespace HumbleCpuMonitor
                 Location = new Point(x, y);
                 Size = new Size(Width, desiredHeigth);
 
-                _mouseHandler = new MouseMessageFilter(Handle);
+                _mouseHandler = new MouseMessageFilter(this);
                 Application.AddMessageFilter(_mouseHandler);
             }
             else

@@ -59,7 +59,7 @@ namespace HumbleCpuMonitor
             {
                 Console.WriteLine(e.Message);
                 return Color.Red;
-            }            
+            }
         }
     }
 }

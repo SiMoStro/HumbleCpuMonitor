@@ -9,6 +9,7 @@
         Bar,
         Line,
         Scatter,
-        FullColor
+        FullColor,
+        Pixel
     }
 }

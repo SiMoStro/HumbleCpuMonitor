@@ -1,4 +1,5 @@
 ﻿using HumbleCpuMonitor.Config;
+using HumbleCpuMonitor.Interfaces;
 using HumbleCpuMonitor.Process;
 using HumbleCpuMonitor.Win32;
 using System;
@@ -9,15 +10,19 @@ using System.Windows.Forms;
 
 namespace HumbleCpuMonitor
 {
-    public partial class MachineInfo : Form
+    public partial class MachineInfo : Form, IWinInfo
     {
         #region [private] objects and vars
 
-        private Timer _timer = new Timer();
-        private MEMORYSTATUSEX _mem = new MEMORYSTATUSEX();
+        private readonly Timer _timer = new Timer();
+        private readonly MEMORYSTATUSEX _mem = new MEMORYSTATUSEX();
         private MouseMessageFilter _mouseHandler;
         private long _counter;
         private bool _isLight;
+
+        public float DpiX { get; private set; }
+
+        public float DpiY { get; private set; }
 
         #endregion
 
@@ -29,7 +34,7 @@ namespace HumbleCpuMonitor
 
             Snapshot();
 
-            _mouseHandler = new MouseMessageFilter(Handle)
+            _mouseHandler = new MouseMessageFilter(this)
             {
                 LeftButtonDoubleClick = HandleLeftDoubleClick
             };
@@ -48,6 +53,16 @@ namespace HumbleCpuMonitor
 
             ConfigurationForm.ConfigurationFormClosed += HandleConfigurationClosed;
             AlignPropertiesToConfig();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            Graphics g = CreateGraphics();
+            DpiX = g.DpiX;
+            DpiY = g.DpiY;
+            g.Dispose();
         }
 
         private void HandleConfigurationClosed(object sender, EventArgs e)
@@ -123,6 +138,7 @@ namespace HumbleCpuMonitor
 
         internal void SaveLocation()
         {
+            ScenarioManager.Instance.Configuration.MachineInfoVisible = Visible;
             if (!Visible) return;
             ScenarioManager.Instance.Configuration.MachineInfoX = Location.X;
             ScenarioManager.Instance.Configuration.MachineInfoY = Location.Y;

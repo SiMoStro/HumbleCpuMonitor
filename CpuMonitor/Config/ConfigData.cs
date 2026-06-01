@@ -125,6 +125,11 @@ namespace HumbleCpuMonitor.Config
         public int? MainWinHeight { get; set; }
 
         /// <summary>
+        /// The Main Chart visibility state
+        /// </summary>
+        public bool MainWinVisible { get; set; }
+
+        /// <summary>
         /// True if the Main Chart window is caption-less, false otherwise
         /// </summary>
         public bool MainWinCaptionLess { get; set; }
@@ -363,6 +368,7 @@ namespace HumbleCpuMonitor.Config
             ProcessChartTopmost = cd.ProcessChartTopmost;
             TopProcessesTopmost = cd.TopProcessesTopmost;
             MachineInfoTopmost = cd.MachineInfoTopmost;
+            MainWinVisible = cd.MainWinVisible;
         }
 
         #endregion

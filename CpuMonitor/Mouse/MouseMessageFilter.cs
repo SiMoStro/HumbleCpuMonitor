@@ -44,33 +44,44 @@ namespace HumbleCpuMonitor
 
             if (MouseMessages.WM_MOUSEMOVE == (MouseMessages)wParam)
             {
-                MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-                var dx = _mouseDown.X - hookStruct.pt.x;
-                var dy = _mouseDown.Y - hookStruct.pt.y;
+                GetCursorPos(out POINT mPos);
+                var dx = _mouseDown.X - mPos.x;
+                var dy = _mouseDown.Y - mPos.y;
+
+                // Debug.WriteLine($"Mouse MOVE @ {mPos.x},{mPos.y} - DELTA {dx}x{dy}");
                 SetWindowPos(_iwi.Handle, IntPtr.Zero, _rectMouseDown.Value.Left - dx, _rectMouseDown.Value.Top - dy, 0, 0, SetWindowPosFlags.IgnoreResize | SetWindowPosFlags.DoNotChangeOwnerZOrder);
             }
         }
 
         public bool PreFilterMessage(ref Message m)
         {
-            if (_iwi.Handle == IntPtr.Zero) return false;
-
-            IntPtr parent = GetAncestor(m.HWnd, GetAncestorFlags.GetRoot);
-            if (parent == IntPtr.Zero) return false;
-            if (parent != _iwi.Handle) return false;
-
-            if (m.Msg == WM_LBUTTONDOWN)
+            try
             {
-                RECT r;
-                GetWindowRect(_iwi.Handle, out r);
-                _rectMouseDown = r;
-                GetCursorPos(out POINT mPos);
-                _mouseDown = new Point(mPos.x, mPos.y);
-                _globalHook.Start();
+                if (_iwi.Handle == IntPtr.Zero) return false;
+
+                IntPtr parent = GetAncestor(m.HWnd, GetAncestorFlags.GetRoot);
+                if (parent == IntPtr.Zero) return false;
+                if (parent != _iwi.Handle) return false;
+
+                if (m.Msg == WM_LBUTTONDOWN)
+                {
+                    RECT r;
+                    GetWindowRect(_iwi.Handle, out r);
+                    _rectMouseDown = r;
+                    GetCursorPos(out POINT mPos);
+                    _mouseDown = new Point(mPos.x, mPos.y);
+
+                    // Debug.WriteLine($"Mouse DOWN @ {mPos.x},{mPos.y} - rect [{r.Left},{r.Top}][{r.Right-r.Left}x{r.Bottom-r.Top}]");
+                    _globalHook.Start();
+                }
+                else if (m.Msg == WM_LBUTTONDBLCLK)
+                {
+                    LeftButtonDoubleClick?.Invoke();
+                }
             }
-            else if (m.Msg == WM_LBUTTONDBLCLK)
+            catch (Exception e)
             {
-                LeftButtonDoubleClick?.Invoke();
+
             }
 
             return false;

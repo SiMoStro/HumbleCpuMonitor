@@ -11,6 +11,7 @@ using HumbleCpuMonitor.Process;
 using HumbleCpuMonitor.Config;
 using System.Collections.Generic;
 using HumbleCpuMonitor.Interfaces;
+using HumbleCpuMonitor.Win32;
 
 namespace HumbleCpuMonitor
 {
@@ -42,6 +43,7 @@ namespace HumbleCpuMonitor
         private MenuItem _miUpdThreeSeconds;
         private MenuItem _miMachineInfo;
         private MenuItem _miTopProcsInfo;
+        private MenuItem _resetWindowsPos;
         private MenuItem _configMenu;
 
         private MenuItem _miUseBarChart;
@@ -136,6 +138,7 @@ namespace HumbleCpuMonitor
 
             _totalCpuMode = true;
             SwitchChartMode(ScenarioManager.Instance.Configuration.ChartType);
+            RestoreVisibility();
 
             ConfigurationForm.ConfigurationFormClosed += HandleConfigurationFormClosed;
             ConfigurationForm.ShortcutsUpdated += HandleShortcutsUpdated;
@@ -232,9 +235,28 @@ namespace HumbleCpuMonitor
             config.MainWinY = Location.Y;
             config.MainWinWidth = Size.Width;
             config.MainWinHeight = Size.Height;
+            config.MainWinVisible = Visible;
             config.ChartType = _chartMode;
             if (_machineInfo != null) _machineInfo.SaveLocation();
             if (_topProcs != null) _topProcs.SaveLocation();
+        }
+
+        private void RestoreVisibility()
+        {
+            if (ScenarioManager.Instance.Configuration.MainWinVisible)
+            {
+                ToggleWindowVisibility();
+            }
+
+            if (ScenarioManager.Instance.Configuration.MachineInfoVisible)
+            {
+                ToggleMachineInfo();
+            }
+
+            if (ScenarioManager.Instance.Configuration.TopProcsInfoVisible)
+            {
+                ToggleProcessInfo();
+            }
         }
 
         #endregion
@@ -405,40 +427,14 @@ namespace HumbleCpuMonitor
             _miTopProcsInfo = new MenuItem("Top Processes");
             _miTopProcsInfo.Click += (o, e) =>
             {
-                if (_topProcs != null)
-                {
-                    _topProcs.Close();
-                    _miTopProcsInfo.Checked = false;
-                    return;
-                }
-
-                _topProcs = new TopCpuProcesses();
-                _topProcs.FormClosing += (o2, e2) =>
-                {
-                    _topProcs = null;
-                };
-                _miTopProcsInfo.Checked = true;
-                _topProcs.Show();
+                
             };
+
+            _resetWindowsPos = new MenuItem("Reset positions");
+            _resetWindowsPos.Click += HandleResetWindowsPosition;
 
             _miMachineInfo = new MenuItem("Machine info");
-            _miMachineInfo.Click += (o, e) =>
-            {
-                if (_machineInfo != null)
-                {
-                    _machineInfo.Close();
-                    _miMachineInfo.Checked = false;
-                    return;
-                }
-
-                _machineInfo = new MachineInfo();
-                _machineInfo.FormClosing += (o2, e2) =>
-                {
-                    _machineInfo = null;
-                };
-                _miMachineInfo.Checked = true;
-                _machineInfo.Show();
-            };
+            _miMachineInfo.Click += (o, e) => ToggleMachineInfo();
 
             _selectProcess = new MenuItem("Select process");
             _selectProcess.Click += (o, e) =>
@@ -452,10 +448,7 @@ namespace HumbleCpuMonitor
             };
 
             _configMenu = new MenuItem("Configuration");
-            _configMenu.Click += (o, e) =>
-            {
-                ConfigurationForm.ShowConfig();
-            };
+            _configMenu.Click += (o, e) => ToggleProcessInfo();
 
             upd.MenuItems.Add(_miUpdInsane);
             upd.MenuItems.Add(_miUpdHalfSecond);
@@ -470,6 +463,7 @@ namespace HumbleCpuMonitor
             _rightClickMenu.MenuItems.Add(_selectProcess);
             _rightClickMenu.MenuItems.Add(_miTopProcsInfo);
             _rightClickMenu.MenuItems.Add(_miMachineInfo);
+            _rightClickMenu.MenuItems.Add(_resetWindowsPos);
             _rightClickMenu.MenuItems.Add(_configMenu);
             _rightClickMenu.MenuItems.Add(new MenuItem("-"));
             _rightClickMenu.MenuItems.Add(_miExitMenu);
@@ -482,6 +476,47 @@ namespace HumbleCpuMonitor
             };
 
             BuildLeftClickMenu();
+        }
+
+        private void ToggleMachineInfo()
+        {
+            if (_machineInfo != null)
+            {
+                _machineInfo.Close();
+                _miMachineInfo.Checked = false;
+                return;
+            }
+
+            _machineInfo = new MachineInfo();
+            _machineInfo.FormClosing += (o2, e2) =>
+            {
+                _machineInfo = null;
+            };
+            _miMachineInfo.Checked = true;
+            _machineInfo.Show();
+        }
+
+        private void ToggleProcessInfo()
+        {
+            if (_topProcs != null)
+            {
+                _topProcs.Close();
+                _miTopProcsInfo.Checked = false;
+                return;
+            }
+
+            _topProcs = new TopCpuProcesses();
+            _topProcs.FormClosing += (o2, e2) =>
+            {
+                _topProcs = null;
+            };
+            _miTopProcsInfo.Checked = true;
+            _topProcs.Show();
+        }
+
+        private void HandleResetWindowsPosition(object sender, EventArgs e)
+        {
+            Location = new Point(5, 5);
         }
 
         private void BuildLeftClickMenu()

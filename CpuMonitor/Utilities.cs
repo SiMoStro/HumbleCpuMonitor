@@ -27,6 +27,15 @@ namespace HumbleCpuMonitor
         }
     }
 
+    internal static class MouseExt
+    {
+        public static Point GetXYParams(this IntPtr lParam)
+        {
+            Point retVal = new Point((short)((long)lParam & 0xFFFF), (short)(((long)lParam >> 16) & 0xFFFF));
+            return retVal;
+        }
+    }
+
     internal static class ColorExt
     {
         /// <summary>

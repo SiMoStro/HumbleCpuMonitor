@@ -425,10 +425,7 @@ namespace HumbleCpuMonitor
             };
 
             _miTopProcsInfo = new MenuItem("Top Processes");
-            _miTopProcsInfo.Click += (o, e) =>
-            {
-                
-            };
+            _miTopProcsInfo.Click += (o, e) => ToggleProcessInfo();
 
             _resetWindowsPos = new MenuItem("Reset positions");
             _resetWindowsPos.Click += HandleResetWindowsPosition;
@@ -448,7 +445,7 @@ namespace HumbleCpuMonitor
             };
 
             _configMenu = new MenuItem("Configuration");
-            _configMenu.Click += (o, e) => ToggleProcessInfo();
+            _configMenu.Click += (o, e) => ConfigurationForm.ShowConfig();
 
             upd.MenuItems.Add(_miUpdInsane);
             upd.MenuItems.Add(_miUpdHalfSecond);

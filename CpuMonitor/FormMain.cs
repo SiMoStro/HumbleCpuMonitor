@@ -367,6 +367,7 @@ namespace HumbleCpuMonitor
                 {
                     UpdateConfigData();
                 }
+
                 if (_machineInfo != null && _machineInfo.Visible)
                 {
                     _machineInfo.SaveLocation();
@@ -488,6 +489,7 @@ namespace HumbleCpuMonitor
             _machineInfo.FormClosing += (o2, e2) =>
             {
                 _machineInfo = null;
+                ScenarioManager.Instance.Configuration.MachineInfoVisible = false;
             };
             _miMachineInfo.Checked = true;
             _machineInfo.Show();
@@ -506,6 +508,7 @@ namespace HumbleCpuMonitor
             _topProcs.FormClosing += (o2, e2) =>
             {
                 _topProcs = null;
+                ScenarioManager.Instance.Configuration.TopProcsInfoVisible = false;
             };
             _miTopProcsInfo.Checked = true;
             _topProcs.Show();

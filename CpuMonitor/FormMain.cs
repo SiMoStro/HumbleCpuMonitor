@@ -516,7 +516,19 @@ namespace HumbleCpuMonitor
 
         private void HandleResetWindowsPosition(object sender, EventArgs e)
         {
-            Location = new Point(5, 5);
+            Point pt = new Point(5, 5);
+            Location = pt;
+            if (_topProcs != null && _topProcs.Visible)
+            {
+                pt.Offset(pt);
+                _topProcs.Location = pt;
+            }
+
+            if (_machineInfo != null && _machineInfo.Visible)
+            {
+                pt.Offset(pt);
+                _machineInfo.Location = pt;
+            }
         }
 
         private void BuildLeftClickMenu()
